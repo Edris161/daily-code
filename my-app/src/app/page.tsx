@@ -112,7 +112,7 @@ export default function Home() {
             <h1 className="text-2xl mt-12 mb-6"> Top Selling Products</h1>
           </div>
          <div className="grid grid-cols-5 gap-4 mt-3">
-             <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl">
+             <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-75 shadow-xl">
                   <Image
                    src="/p1.png"
                    alt=""
@@ -244,7 +244,7 @@ export default function Home() {
                <div className="w-1/2">
                    <div className="text-xl mb-2">Dairy Products</div>
                    <div className="opacity-50">Milk and etc</div>
-                   <button className="bg-[#e82933] rounded-3xl px-10 py-1 inline-flex items-center gap-2 text[14px] text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Visit</button>
+                   <button className="bg-[#e82933] rounded-3xl px-10 py-1 inline-flex items-center gap-2 text[14px] text-white mt-6 cursor-pointer hover:bg-[#cb6c01] hover:scale-105 duration-200"><FiShoppingBag />Visit</button>
                </div>
                <div className="w-1/2">
                  <Image
@@ -260,7 +260,7 @@ export default function Home() {
                <div className="w-1/2">
                    <div className="text-xl mb-2">Dairy Products</div>
                    <div className="opacity-50">Milk and etc</div>
-                   <button className="bg-[#e82933] rounded-3xl px-10 py-1 inline-flex items-center gap-2 text[14px] text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Visit</button>
+                   <button className="bg-[#e82933] rounded-3xl px-10 py-1 inline-flex items-center gap-2 text[14px] text-white mt-6 cursor-pointer hover:bg-[#cb6c01] hover:scale-105 duration-200"><FiShoppingBag />Visit</button>
                </div>
                <div className="w-1/2">
                  <Image
@@ -276,7 +276,7 @@ export default function Home() {
                <div className="w-1/2">
                    <div className="text-xl mb-2">Meat</div>
                    <div className="opacity-50"> and etc</div>
-                   <button className="bg-[#e82933] rounded-3xl px-10 py-1 inline-flex items-center gap-2 text[14px] text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Visit</button>
+                   <button className="bg-[#e82933] rounded-3xl px-10 py-1 inline-flex items-center gap-2 text[14px] text-white mt-6 cursor-pointer hover:bg-[#cb6c01] hover:scale-105 duration-200"><FiShoppingBag />Visit</button>
                </div>
                <div className="w-1/2">
                  <Image
@@ -292,7 +292,7 @@ export default function Home() {
                <div className="w-1/2">
                    <div className="text-xl mb-2">Fruit and Vegetable</div>
                    <div className="opacity-50">Apple and etc</div>
-                   <button className="bg-[#e82933] rounded-3xl px-10 py-1 inline-flex items-center gap-2 text[14px] text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Visit</button>
+                   <button className="bg-[#e82933] rounded-3xl px-10 py-1 inline-flex items-center gap-2 text[14px] text-white mt-6 cursor-pointer hover:bg-[#cb6c01] hover:scale-105 duration-200"><FiShoppingBag />Visit</button>
                </div>
                <div className="w-1/2">
                  <Image
@@ -439,13 +439,26 @@ export default function Home() {
           </div>
        </section>
       <section>
-        <div className=" bg-[url(/kabul3.jpg)] py-32">
-
-        </div>
+        <div className=" relative min-h-screen w-full h-52 bg-cover bg-center mt-15  bg-[url(/kabul3.jpg)]  ">
+           <div className=" text-5xl flex justify-center items-start p-10 h-full text-white bg-black/50"> 
+              <h1>Buy just  <span className="text-orange-500">now</span></h1>
+             </div> 
+              <div className=" absolute grid grid-cols-4 mt-3 gap-2">
+                <div>
+                   <h1>
+                    
+                   </h1>
+                </div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>   
+           </div>
+     
       </section>
     </>
     
-   
+    
 
   );
 }
