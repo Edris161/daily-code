@@ -124,7 +124,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3">250 AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
              </div>
-              <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl">
+              <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-75 shadow-xl">
                   <Image
                    src="/p2.png"
                    alt=""
@@ -136,7 +136,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3">250 AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
              </div>
-              <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl">
+              <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-200 shadow-xl">
                   <Image
                    src="/p3.png"
                    alt=""
@@ -148,7 +148,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3">250 AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
              </div>
-              <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl">
+              <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-200 shadow-xl">
                   <Image
                    src="/p4.png"
                    alt=""
@@ -160,7 +160,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3">250 AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
              </div>
-             <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl">
+             <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-200 shadow-xl">
                   <Image
                    src="/p5.png"
                    alt=""
@@ -172,7 +172,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3">250 AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
              </div>
-             <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl">
+             <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-200 shadow-xl">
                   <Image
                    src="/p6.png"
                    alt=""
@@ -184,7 +184,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3">250 AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
              </div>
-             <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl">
+             <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-200 shadow-xl">
                   <Image
                    src="/p7.png"
                    alt=""
@@ -196,7 +196,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3">250 AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
              </div>
-             <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl">
+             <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-200 shadow-xl">
                   <Image
                    src="/p8.png"
                    alt=""
@@ -208,7 +208,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3">250 AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
              </div>
-             <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl">
+             <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-200 shadow-xl">
                   <Image
                    src="/p9.png"
                    alt=""
@@ -220,7 +220,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3">250 AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
              </div>
-             <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl">
+             <div className="bg-[#E3F2FD] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-200 shadow-xl">
                   <Image
                    src="/p10.png"
                    alt=""
@@ -314,7 +314,7 @@ export default function Home() {
             <h1 className="text-2xl mt-12 mb-6"> New products for sell</h1>
             </div>
              <div className="grid grid-cols-5 gap-4 mt-3">
-                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl">
+                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-75 shadow-xl">
                 <Image
                    src="/pho1.png"
                    alt=""
@@ -326,7 +326,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3">160 AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
                 </div>
-                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl">
+                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-75 shadow-xl">
                 <Image
                    src="/pho2.png"
                    alt=""
@@ -338,7 +338,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3">80 AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
                 </div>
-                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl">
+                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-75 shadow-xl">
                 <Image
                    src="/pho3.png"
                    alt=""
@@ -350,7 +350,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3">75 AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
                 </div>
-                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl">
+                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-75 shadow-xl">
                 <Image
                    src="/pho4.png"
                    alt=""
@@ -362,7 +362,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3">130 AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
                 </div>
-                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl">
+                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-75 shadow-xl">
                 <Image
                    src="/pho5.png"
                    alt=""
@@ -374,7 +374,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3">80 AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
                 </div>
-                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl">
+                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-75 shadow-xl">
                 <Image
                    src="/pho6.png"
                    alt=""
@@ -386,7 +386,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3">50 AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
                 </div>
-                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl">
+                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-75 shadow-xl">
                 <Image
                    src="/pho7.png"
                    alt=""
@@ -398,7 +398,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3">150 AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
                 </div>
-                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl">
+                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-75 shadow-xl">
                 <Image
                    src="/pho8.png"
                    alt=""
@@ -410,7 +410,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3">150 AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
                 </div>
-                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl">
+                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-75 shadow-xl">
                 <Image
                    src="/pho9.png"
                    alt=""
@@ -422,7 +422,7 @@ export default function Home() {
                   <div className="text-[#E82933] my-3"> 170AFG</div>
                   <button className="bg-[#FBB500] rounded-2xl px-6 py-2 inline-flex items-center gap-2 text-white mt-6 cursor-pointer hover:bg-[#cb6c01]"><FiShoppingBag />Buy</button>
                 </div>
-                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl">
+                <div className="bg-[#fdfcc1] text-center py-8 px-3 rounded-2xl hover:scale-110 duration-75 shadow-xl">
                 <Image
                    src="/pho10.png"
                    alt=""
@@ -439,14 +439,14 @@ export default function Home() {
           </div>
        </section>
       <section>
-        <div className=" relative min-h-screen w-full h-52 bg-cover bg-center mt-15  bg-[url(/kabul3.jpg)]  ">
+        <div className=" absolute min-h-screen w-full h-52 bg-cover bg-center mt-15  bg-[url(/kabul3.jpg)]  ">
            <div className=" text-5xl flex justify-center items-start p-10 h-full text-white bg-black/50"> 
               <h1>Buy just  <span className="text-orange-500">now</span></h1>
              </div> 
-              <div className=" absolute grid grid-cols-4 mt-3 gap-2">
+              <div className=" relative grid grid-cols-4 mt-3 gap-2">
                 <div>
                    <h1>
-                    
+                    hello
                    </h1>
                 </div>
                 <div></div>
