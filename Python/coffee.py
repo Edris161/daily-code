@@ -1,4 +1,4 @@
-def coffee_bot():
+#def coffee_bot():
     print("☕ Welcome to the Python Coffee Shop!")
     print("What would you like today?")
     size = input("Choose a size (small, medium, large): ").lower()
