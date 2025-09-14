@@ -13,5 +13,8 @@ for question in question_data:
 quize = Quizebrain(question_bank)
 
 
-while #quize.still_has_questions():
+while quize.still_has_questions():
         quize.next_question()
+
+print("You have completed Quize")
+print(f"Your final score was: {quize.score}/{quize.question_number}")
