@@ -30,17 +30,17 @@
     },
 
      {
-        id: 1,
+        id: 6,
         url: '#',
         label: 'Home',
     },
      {
-        id:6,
+        id:7,
         url: '#',
         label: 'Contact',
     }
 
- ]
+ ];
 
 
 
