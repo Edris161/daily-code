@@ -38,7 +38,7 @@ const Nav = ({ opeNav }: Props) => {
           <div className='w-10 h-10 rounded-full bg-rose-500 flex items-center justify-center flex-col'>
             <TbAirBalloon className='w-6 h-6 text-white' />
           </div>
-          <h1 className='text-xl md:text-2xl text-black uppercase font-bold'>Alwodin</h1>
+          <h1 className='text-xl md:text-2xl text-white uppercase font-bold'>Alwodin</h1>
         </div>
        <div className="hidden lg:flex items-center space-x-10">
   {navLinks.map((link) => (
@@ -46,7 +46,7 @@ const Nav = ({ opeNav }: Props) => {
       <p
         className="
           relative
-          text-black
+          text-white
           text-base
           font-medium
           inline-block
@@ -79,7 +79,7 @@ const Nav = ({ opeNav }: Props) => {
              </button>
           <HiBars3BottomRight
             onClick={opeNav}
-            className='w-8 h-8 cursor-pointer text-black lg:hidden'
+            className='w-8 h-8 cursor-pointer text-white lg:hidden'
           />
         </div>
       </div>
