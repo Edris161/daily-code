@@ -1,92 +1,100 @@
-from django.db import models
+
 
 # Create your models here.
+from django.db import models
+
+
+# -----------------------
+# Hero Section
+# -----------------------
 class Hero(models.Model):
-  image = models.ImageField(upload-_to "home/imagses")
-  description = models.textField(max_length=500)
-  title = models.CharField(max_length=400)
-  descount = models.CharField(max_length=400)
+    image = models.ImageField(upload_to="home/images")
+    description = models.TextField(max_length=500)
+    title = models.CharField(max_length=400)
+    discount = models.CharField(max_length=400)
 
-  
     def __str__(self):
-        return self.description[:500] 
- 
- 
-class hero_list (models.Model):
- hero = models.ForeignKey(Hero, on_delete=models.CASCADE)
- li = models.CharField(max_length=400)
-        def __str__(self):
-            return self.list[:400]
+        return self.title[:100]
 
 
+class Hero_List(models.Model):
+    hero = models.ForeignKey(Hero, on_delete=models.CASCADE)
+    li = models.CharField(max_length=400)
 
-class Featuerd (models.Model):
-  title = models.CharField(max_length=400)
-  description = models.TextField(max_length=1000)
-        
-            def __str__(self):
-                return self.title[:400]
-
+    def __str__(self):
+        return self.li[:100]
 
 
-class featuers(models.Model):
-featuerd = models.CharField(max_length=500)
-title = models.CharField(max_length=400)
-description = models.TextField(max_length=1000)
-image = models ImageField(upload_to="home/images")
-    
-        def __str__(self):
-            return self.title[:400]
+# -----------------------
+# Featured Section
+# -----------------------
+class Featured(models.Model):
+    title = models.CharField(max_length=400)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.title
 
 
+class Featured_list(models.Model):
+    featured = models.ForeignKey(Featured, on_delete=models.CASCADE)
+    title = models.CharField(max_length=400)
+    description = models.TextField(max_length=1000)
+    image = models.ImageField(upload_to="home/images")
+
+    def __str__(self):
+        return self.title
 
 
-class trusted(models.Model):
-image = models.ImageField(upload_to="home/images")
-link = models.URLField( not_null= True, blank=True )
-name = models.CharField(max_length=400)    
-       
-        def __str__(self):
-            return str(self.id)   
+# -----------------------
+# Trusted Section
+# -----------------------
+class Trusted(models.Model):
+    image = models.ImageField(upload_to="home/images")
+    link = models.URLField(null=True, blank=True)
+    name = models.CharField(max_length=400)
+
+    def __str__(self):
+        return self.name
 
 
-
+# -----------------------
+# Experience Section
+# -----------------------
 class Experience(models.Model):
-  sub_title = models.CharField(max_length=400)
-  main_title = models.CharField(max_length=400)
-  description = models.TextField(max_length=1000)
-  image1 = models.ImageField(upload_to="home/images")
-  image2 =models.ImageField(upload_to="home/images")
-        
-        def __str__(self):
-            return self.main_title[:400]
+    sup_title = models.CharField(max_length=400)
+    main_title = models.CharField(max_length=400)
+    description = models.TextField(max_length=1000)
+    image1 = models.ImageField(upload_to="home/images")
+    image2 = models.ImageField(upload_to="home/images")
 
-class Programs (models.Model):
-        experience = models.ForeignKey(Experience, on_delete=models.CASCADE)
-        li = models.CharField (max_length=400)
-          
-          def __str__(self):
-                return self.text[:400]
+    def __str__(self):
+        return self.main_title
 
 
+class Program_services(models.Model):
+    experience = models.ForeignKey(Experience, on_delete=models.CASCADE)
+    list = models.TextField()
 
-class Achievment(models.Model):
-     experience = models.ForeignKey(Experience, on_delete=models.CASCADE)
-     li = models.TextField
-      def __str__(self):
-            return str(self.id)                        
+    def __str__(self):
+        return self.list
 
-    
- 
- 
- 
- 
- 
- 
-class score (models.Model);
-       number = modesl.FloatField()
-       title = models.CharField(max_length=300)
-       experience = models.ForeignKey(Experience on_delete=models.CASCADE)
-    
-     def __str__(self):
-        return str(self.id)
+
+class Achievements(models.Model):
+    experience = models.ForeignKey(Experience, on_delete=models.CASCADE)
+    number = models.FloatField()
+    title = models.CharField(max_length=400)
+
+    def __str__(self):
+        return self.title
+
+
+class Score(models.Model):
+    experience = models.ForeignKey(Experience, on_delete=models.CASCADE)
+    title = models.CharField(max_length=400)
+    number = models.FloatField()
+
+    def __str__(self):
+        return self.title
+
+
