@@ -20,6 +20,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
+    path('login/', include('login.urls')),
 ]
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
