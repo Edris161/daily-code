@@ -29,38 +29,45 @@ export default function PlayerForm({ onAdd }: { onAdd: (player: any) => void }) 
   return (
     <form
       onSubmit={submitHandler}
-      className="bg-white p-4 rounded shadow mb-6 grid grid-cols-1 md:grid-cols-4 gap-4"
+      className="bg-slate-900 border border-slate-800 rounded-2xl shadow-lg p-6 mb-6 grid grid-cols-1 md:grid-cols-4 gap-4"
     >
+      {/* Player Name */}
       <input
-        className="border p-2 rounded"
+        className="border border-slate-700 bg-slate-800 px-4 py-2 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         placeholder="Player Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
 
+      {/* Age */}
       <input
-        className="border p-2 rounded"
-        placeholder="Age"
+        className="border border-slate-700 bg-slate-800 px-4 py-2 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         type="number"
+        placeholder="Age"
         value={age}
         onChange={(e) => setAge(e.target.value)}
       />
 
+      {/* Team */}
       <input
-        className="border p-2 rounded"
+        className="border border-slate-700 bg-slate-800 px-4 py-2 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         placeholder="Team"
         value={team}
         onChange={(e) => setTeam(e.target.value)}
       />
 
+      {/* Training Time */}
       <input
-        className="border p-2 rounded"
+        className="border border-slate-700 bg-slate-800 px-4 py-2 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         placeholder="Training Time"
         value={trainingTime}
         onChange={(e) => setTrainingTime(e.target.value)}
       />
 
-      <button className="bg-blue-600 text-white py-2 rounded col-span-1 md:col-span-4">
+      {/* Submit Button */}
+      <button
+        className="col-span-1 md:col-span-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-3 rounded-2xl shadow-lg transition transform hover:-translate-y-0.5"
+      >
         Add Player
       </button>
     </form>

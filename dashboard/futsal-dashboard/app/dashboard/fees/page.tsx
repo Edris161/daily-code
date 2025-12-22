@@ -1,82 +1,104 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProtectedRoute from "@/components/ProtectedRoute";
-
-type Player = { id: number; name: string; team: string; feePaid: boolean };
+import { apiFetch } from "@/lib/api";
 
 export default function FeesPage() {
-  const [players, setPlayers] = useState<Player[]>([
-    { id: 1, name: "Ali Ahmad", team: "U14", feePaid: true },
-    { id: 2, name: "Karim Noor", team: "U18", feePaid: false },
-    { id: 3, name: "Hamid Rahimi", team: "U14", feePaid: false },
-  ]);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [players, setPlayers] = useState<Player[]>([]);
 
-  const [teamFilter, setTeamFilter] = useState("");
+  // Fetch teams & players
+  useEffect(() => {
+    apiFetch("/teams/").then(setTeams).catch(console.error);
+    apiFetch("/players/").then(setPlayers).catch(console.error);
+  }, []);
 
-  const toggleFeeStatus = (id: number) => {
-    setPlayers(players.map((p) => (p.id === id ? { ...p, feePaid: !p.feePaid } : p)));
+  // Toggle fee status
+  const toggleFee = async (playerId: number, currentStatus: boolean) => {
+    try {
+      await apiFetch(`/players/${playerId}/`, {
+        method: "PATCH",
+        body: { fee_paid: !currentStatus },
+      });
+
+      setPlayers((prev) =>
+        prev.map((p) =>
+          p.id === playerId ? { ...p, fee_paid: !currentStatus } : p
+        )
+      );
+    } catch (err) {
+      console.error(err);
+    }
   };
-
-  const filteredPlayers = players.filter((p) => (teamFilter ? p.team === teamFilter : true));
 
   return (
     <ProtectedRoute>
-      <h1 className="text-3xl font-bold mb-6">Player Fees</h1>
+      <div className="space-y-8">
 
-      {/* Filter */}
-      <div className="mb-4">
-        <select
-          className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          value={teamFilter}
-          onChange={(e) => setTeamFilter(e.target.value)}
-        >
-          <option value="">All Teams</option>
-          <option value="U14">U14</option>
-          <option value="U18">U18</option>
-        </select>
-      </div>
+        {/* Header */}
+        <div className="rounded-2xl bg-gradient-to-r from-yellow-900 to-yellow-700 p-6 shadow-lg">
+          <h1 className="text-3xl font-extrabold text-white">💰 Player Fees</h1>
+          <p className="text-yellow-200 mt-1">Manage fee payments for players</p>
+        </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto bg-white shadow rounded-xl">
-        <table className="min-w-full">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="p-3 text-left">Name</th>
-              <th className="p-3 text-left">Team</th>
-              <th className="p-3 text-left">Fee Status</th>
-              <th className="p-3 text-left">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredPlayers.map((p) => (
-              <tr key={p.id} className="border-t hover:bg-gray-50 transition">
-                <td className="p-3 flex items-center gap-2">
-                  <div className="w-8 h-8 bg-blue-500 text-white flex items-center justify-center rounded-full">
-                    {p.name[0]}
-                  </div>
-                  {p.name}
-                </td>
-                <td className="p-3">{p.team}</td>
-                <td className="p-3">
-                  {p.feePaid ? (
-                    <span className="text-green-600 font-semibold">Paid</span>
-                  ) : (
-                    <span className="text-red-600 font-semibold">Unpaid</span>
-                  )}
-                </td>
-                <td className="p-3">
-                  <button
-                    onClick={() => toggleFeeStatus(p.id)}
-                    className="text-blue-600 hover:underline transition"
-                  >
-                    Toggle Fee
-                  </button>
-                </td>
+        {/* Players Table */}
+        <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900 shadow">
+          <table className="min-w-full text-sm">
+            <thead className="bg-slate-800 text-slate-300">
+              <tr>
+                <th className="p-4 text-left">Player</th>
+                <th className="p-4">Age</th>
+                <th className="p-4">Team</th>
+                <th className="p-4">Fee Status</th>
+                <th className="p-4">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {players.map((player) => (
+                <tr
+                  key={player.id}
+                  className="border-t border-slate-800 hover:bg-slate-800/50 transition"
+                >
+                  <td className="p-4 flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-700 text-white font-bold flex items-center justify-center">
+                      {player.name.charAt(0).toUpperCase()}
+                    </div>
+                    <span className="text-white">{player.name}</span>
+                  </td>
+
+                  <td className="p-4 text-center text-slate-200">{player.age}</td>
+
+                  <td className="p-4 text-center text-slate-200">
+                    {teams.find((t) => t.id === player.team)?.name || "No Team"}
+                  </td>
+
+                  <td className="p-4 text-center">
+                    {player.fee_paid ? (
+                      <span className="rounded-full bg-green-600/20 px-3 py-1 text-green-400 font-semibold">
+                        Paid
+                      </span>
+                    ) : (
+                      <span className="rounded-full bg-red-600/20 px-3 py-1 text-red-400 font-semibold">
+                        Unpaid
+                      </span>
+                    )}
+                  </td>
+
+                  <td className="p-4 text-center">
+                    <button
+                      className="rounded-lg bg-blue-600 px-4 py-1 text-white hover:bg-blue-700 active:scale-95 transition"
+                      onClick={() => toggleFee(player.id, player.fee_paid)}
+                    >
+                      Toggle
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
       </div>
     </ProtectedRoute>
   );

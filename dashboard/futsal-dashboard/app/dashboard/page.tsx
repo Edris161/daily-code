@@ -1,31 +1,48 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import StatCard from "@/components/StatCard";
-import { FaUsers, FaUserAlt, FaMoneyBillWave } from "react-icons/fa";
-import { useState } from "react";
+import { apiFetch } from "@/lib/api";
+
+type Stats = {
+  total_players: number;
+  total_teams: number;
+  paid_fees: number;
+  unpaid_fees: number;
+  total_income: number;
+};
 
 export default function DashboardPage() {
-  const [players] = useState([
-    { id: 1, name: "Ali Ahmad", age: 14, team: "U14", feePaid: true },
-    { id: 2, name: "Karim Noor", age: 18, team: "U18", feePaid: false },
-    { id: 3, name: "Hamid Rahimi", age: 16, team: "U14", feePaid: true },
-  ]);
+  const [stats, setStats] = useState<Stats | null>(null);
 
-  const totalPlayers = players.length;
-  const u14Players = players.filter((p) => p.team === "U14").length;
-  const u18Players = players.filter((p) => p.team === "U18").length;
-  const unpaidFees = players.filter((p) => !p.feePaid).length;
+  useEffect(() => {
+    apiFetch("/dashboard/stats/")
+      .then(setStats)
+      .catch(console.error);
+  }, []);
+
+  if (!stats) return <div className="text-white p-6">Loading...</div>;
 
   return (
     <ProtectedRoute>
-      <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard title="Total Players" value={totalPlayers} icon={<FaUsers />} />
-        <StatCard title="U14 Players" value={u14Players} icon={<FaUserAlt />} />
-        <StatCard title="U18 Players" value={u18Players} icon={<FaUserAlt />} />
-        <StatCard title="Unpaid Fees" value={unpaidFees} icon={<FaMoneyBillWave />} />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+
+        <StatCard title="Total Players" value={stats.total_players} />
+        <StatCard title="Teams" value={stats.total_teams} />
+        <StatCard title="Paid Fees" value={stats.paid_fees} />
+        <StatCard title="Unpaid Fees" value={stats.unpaid_fees} />
+        <StatCard title="Total Income" value={`$${stats.total_income}`} />
+
       </div>
     </ProtectedRoute>
+  );
+}
+
+function StatCard({ title, value }: { title: string; value: any }) {
+  return (
+    <div className="rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow">
+      <p className="text-slate-400 text-sm">{title}</p>
+      <h2 className="text-3xl font-bold text-white mt-2">{value}</h2>
+    </div>
   );
 }

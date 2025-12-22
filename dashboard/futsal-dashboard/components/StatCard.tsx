@@ -1,4 +1,5 @@
 "use client";
+
 import { ReactNode } from "react";
 
 export default function StatCard({
@@ -11,11 +12,26 @@ export default function StatCard({
   icon?: ReactNode;
 }) {
   return (
-    <div className="bg-linear-to-r from-blue-500 to-blue-700 text-white shadow-lg rounded-xl p-6 flex items-center gap-4 hover:scale-105 transform transition duration-200">
-      {icon && <div className="text-4xl">{icon}</div>}
-      <div>
-        <p className="text-sm opacity-90">{title}</p>
-        <p className="text-2xl font-bold">{value}</p>
+    <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500 p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+      
+      {/* Glow Effect */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-20 bg-white blur-2xl transition" />
+
+      <div className="relative z-10 flex items-center gap-4 text-white">
+        {icon && (
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/15 text-3xl shadow-inner">
+            {icon}
+          </div>
+        )}
+
+        <div>
+          <p className="text-sm font-medium text-blue-100 tracking-wide">
+            {title}
+          </p>
+          <p className="text-3xl font-extrabold tracking-tight">
+            {value}
+          </p>
+        </div>
       </div>
     </div>
   );

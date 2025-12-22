@@ -1,43 +1,82 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+async function apiFetch(path: string, options: RequestInit = {}) {
+  const base = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/$/, "");
+  const url = path.startsWith("/") ? `${base}${path}` : `${base}/${path}`;
+  const res = await fetch(url, {
+    headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+    ...options,
+  });
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    const message = (body && (body.detail || body.message)) || res.statusText;
+    throw new Error(message);
+  }
+
+  return res.json();
+}
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const submitHandler = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem("auth", "true");
-    router.push("/dashboard");
+    setError("");
+
+    try {
+      const data = await apiFetch("/auth/login/", {
+        method: "POST",
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
+
+      // ✅ Save tokens
+      localStorage.setItem("access", data.access);
+      localStorage.setItem("refresh", data.refresh);
+
+      router.push("/dashboard");
+    } catch {
+      setError("Invalid username or password");
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-slate-900">
       <form
-        onSubmit={submitHandler}
-        className="bg-white p-8 rounded-xl shadow-lg w-96"
+        onSubmit={handleLogin}
+        className="w-full max-w-sm bg-slate-800 p-6 rounded-xl shadow-lg"
       >
-        <h1 className="text-3xl font-bold mb-6 text-center">Futsal Club Login</h1>
+        <h1 className="text-2xl font-bold text-white mb-4">Login</h1>
+
+        {error && (
+          <p className="mb-3 text-sm text-red-400">{error}</p>
+        )}
 
         <input
-          className="border p-3 w-full mb-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          className="w-full mb-3 px-4 py-2 rounded bg-slate-700 text-white"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
 
         <input
-          className="border p-3 w-full mb-6 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           type="password"
+          className="w-full mb-4 px-4 py-2 rounded bg-slate-700 text-white"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button className="bg-blue-600 text-white w-full py-3 rounded-lg hover:bg-blue-700 transition">
+        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-semibold">
           Login
         </button>
       </form>

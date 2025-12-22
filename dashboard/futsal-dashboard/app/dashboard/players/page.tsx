@@ -1,111 +1,196 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { apiFetch } from "@/lib/api";
+
+/* ================= TYPES ================= */
+
+type Team = {
+  id: number;
+  name: string;
+};
 
 type Player = {
   id: number;
   name: string;
   age: number;
-  team: string;
-  trainingTime: string;
-  feePaid: boolean;
+  team: number | null;
+  team_name?: string;
+  training_time?: string;
+  fee_paid: boolean;
 };
 
+/* ================= PAGE ================= */
+
 export default function PlayersPage() {
-  const [players, setPlayers] = useState<Player[]>([
-    { id: 1, name: "Ali Ahmad", age: 14, team: "U14", trainingTime: "4:00-5:30", feePaid: true },
-    { id: 2, name: "Karim Noor", age: 18, team: "U18", trainingTime: "5:30-7:00", feePaid: false },
-  ]);
-
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
-  const [team, setTeam] = useState("U14");
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [newPlayerName, setNewPlayerName] = useState("");
+  const [newPlayerAge, setNewPlayerAge] = useState("");
+  const [selectedTeam, setSelectedTeam] = useState<number | "">("");
   const [trainingTime, setTrainingTime] = useState("");
-  const [teamFilter, setTeamFilter] = useState("");
-  const [sortAge, setSortAge] = useState("");
 
-  const addPlayer = () => {
-    if (!name || !age || !trainingTime) return;
-    const newPlayer: Player = {
-      id: Date.now(),
-      name,
-      age: Number(age),
-      team,
-      trainingTime,
-      feePaid: false,
-    };
-    setPlayers([...players, newPlayer]);
-    setName("");
-    setAge("");
-    setTrainingTime("");
+  /* ===== Fetch teams & players ===== */
+  useEffect(() => {
+    apiFetch("/teams/").then(setTeams).catch(console.error);
+    apiFetch("/players/").then(setPlayers).catch(console.error);
+  }, []);
+
+  /* ===== Add new player ===== */
+  const addPlayer = async () => {
+    if (!newPlayerName || !newPlayerAge) return;
+
+    try {
+      const newPlayer = await apiFetch("/players/", {
+        method: "POST",
+        body: {
+          name: newPlayerName,
+          age: Number(newPlayerAge),
+          team: selectedTeam || null,
+          training_time: trainingTime || "",
+          fee_paid: false,
+        },
+      });
+
+      setPlayers((prev) => [...prev, newPlayer]);
+      setNewPlayerName("");
+      setNewPlayerAge("");
+      setSelectedTeam("");
+      setTrainingTime("");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const filteredPlayers = players
-    .filter((p) => (teamFilter ? p.team === teamFilter : true))
-    .sort((a, b) =>
-      sortAge === "asc" ? a.age - b.age : sortAge === "desc" ? b.age - a.age : 0
-    );
+  /* ===== Update player field ===== */
+  const updatePlayer = async (id: number, data: Partial<Player>) => {
+    try {
+      await apiFetch(`/players/${id}/`, {
+        method: "PATCH",
+        body: data, // ✅ apiFetch will stringify automatically
+      });
+
+      setPlayers((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, ...data } : p))
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <ProtectedRoute>
-      <h1 className="text-3xl font-bold mb-6">Players</h1>
+      <div className="space-y-8">
 
-      {/* Add Player */}
-      <div className="bg-white shadow rounded p-4 mb-6 grid grid-cols-1 md:grid-cols-5 gap-3">
-        <input className="border p-2 rounded" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-        <input className="border p-2 rounded" type="number" placeholder="Age" value={age} onChange={(e) => setAge(e.target.value)} />
-        <select className="border p-2 rounded" value={team} onChange={(e) => setTeam(e.target.value)}>
-          <option value="U14">U14</option>
-          <option value="U18">U18</option>
-        </select>
-        <input className="border p-2 rounded" placeholder="Training Time" value={trainingTime} onChange={(e) => setTrainingTime(e.target.value)} />
-        <button className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition" onClick={addPlayer}>Add</button>
-      </div>
+        {/* Header */}
+        <div className="rounded-2xl bg-gradient-to-r from-blue-900 to-blue-700 p-6 shadow-lg">
+          <h1 className="text-3xl font-extrabold text-white">
+            🧍‍♂️ Players Management
+          </h1>
+          <p className="text-blue-200 mt-1">Futsal Training Academy</p>
+        </div>
 
-      {/* Filter & Sort */}
-      <div className="flex gap-4 mb-4">
-        <select className="border p-2 rounded" onChange={(e) => setTeamFilter(e.target.value)} value={teamFilter}>
-          <option value="">All Teams</option>
-          <option value="U14">U14</option>
-          <option value="U18">U18</option>
-        </select>
-        <select className="border p-2 rounded" onChange={(e) => setSortAge(e.target.value)} value={sortAge}>
-          <option value="">Sort by Age</option>
-          <option value="asc">Youngest</option>
-          <option value="desc">Oldest</option>
-        </select>
-      </div>
+        {/* Add Player */}
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow">
+          <h2 className="text-lg font-semibold text-white mb-4">Add New Player</h2>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+            <input
+              placeholder="Full Name"
+              value={newPlayerName}
+              onChange={(e) => setNewPlayerName(e.target.value)}
+              className="rounded-xl bg-slate-800 border border-slate-700 px-4 py-2 text-white placeholder-slate-400 focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+            <input
+              type="number"
+              placeholder="Age"
+              value={newPlayerAge}
+              onChange={(e) => setNewPlayerAge(e.target.value)}
+              className="rounded-xl bg-slate-800 border border-slate-700 px-4 py-2 text-white placeholder-slate-400 focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+            <select
+              value={selectedTeam}
+              onChange={(e) =>
+                setSelectedTeam(e.target.value === "" ? "" : Number(e.target.value))
+              }
+              className="rounded-xl bg-slate-800 border border-slate-700 px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+            >
+              <option value="">No Team</option>
+              {teams.map((team) => (
+                <option key={team.id} value={team.id}>{team.name}</option>
+              ))}
+            </select>
+            <input
+              placeholder="Training Time"
+              value={trainingTime}
+              onChange={(e) => setTrainingTime(e.target.value)}
+              className="rounded-xl bg-slate-800 border border-slate-700 px-4 py-2 text-white placeholder-slate-400 focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+            <button
+              onClick={addPlayer}
+              className="rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 active:scale-95 transition"
+            >
+              + Add
+            </button>
+          </div>
+        </div>
 
-      {/* Players Table */}
-      <div className="overflow-x-auto bg-white shadow rounded">
-        <table className="min-w-full">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="p-3 text-left">Name</th>
-              <th className="p-3 text-left">Age</th>
-              <th className="p-3 text-left">Team</th>
-              <th className="p-3 text-left">Training</th>
-              <th className="p-3 text-left">Fee</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredPlayers.map((p) => (
-              <tr key={p.id} className="border-t hover:bg-gray-50 transition">
-                <td className="p-3 flex items-center gap-2">
-                  <div className="w-8 h-8 bg-blue-500 text-white flex items-center justify-center rounded-full">
-                    {p.name[0]}
-                  </div>
-                  {p.name}
-                </td>
-                <td className="p-3">{p.age}</td>
-                <td className="p-3">{p.team}</td>
-                <td className="p-3">{p.trainingTime}</td>
-                <td className="p-3">{p.feePaid ? <span className="text-green-600 font-semibold">Paid</span> : <span className="text-red-600 font-semibold">Unpaid</span>}</td>
+        {/* Players Table */}
+        <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900 shadow">
+          <table className="min-w-full text-sm">
+            <thead className="bg-slate-800 text-slate-300">
+              <tr>
+                <th className="p-4 text-left">Player</th>
+                <th className="p-4">Age</th>
+                <th className="p-4">Team</th>
+                <th className="p-4">Training</th>
+                <th className="p-4">Fee</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {players.map((p) => (
+                <tr key={p.id} className="border-t border-slate-800 hover:bg-slate-800/50 transition">
+                  <td className="p-4 flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white font-bold flex items-center justify-center">
+                      {p.name.charAt(0)}
+                    </div>
+                    <span className="text-white">{p.name}</span>
+                  </td>
+                  <td className="p-4 text-center text-slate-200">{p.age}</td>
+                  <td className="p-4 text-center">
+                    <select
+                      value={p.team || ""}
+                      onChange={(e) => updatePlayer(p.id, { team: e.target.value === "" ? null : Number(e.target.value) })}
+                      className="rounded-lg bg-slate-900 border border-slate-700 px-2 py-1 text-sm text-white"
+                    >
+                      <option value="">No Team</option>
+                      {teams.map((t) => (
+                        <option key={t.id} value={t.id}>{t.name}</option>
+                      ))}
+                    </select>
+                  </td>
+                  <td className="p-4 text-center">
+                    <input
+                      value={p.training_time || ""}
+                      onChange={(e) => updatePlayer(p.id, { training_time: e.target.value })}
+                      className="rounded-lg bg-slate-900 border border-slate-700 px-2 py-1 text-sm text-white text-center"
+                      placeholder="Not Assigned"
+                    />
+                  </td>
+                  <td className="p-4 text-center">
+                    <button
+                      onClick={() => updatePlayer(p.id, { fee_paid: !p.fee_paid })}
+                      className={`rounded-full px-3 py-1 font-semibold ${p.fee_paid ? 'bg-green-600/20 text-green-400' : 'bg-red-600/20 text-red-400'}`}
+                    >
+                      {p.fee_paid ? "Paid" : "Unpaid"}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
       </div>
     </ProtectedRoute>
   );
