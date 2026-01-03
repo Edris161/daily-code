@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-ck7v3vwc^o9rbdpqbzb!7-7=-c4h(%z%x0mtdh3(t+__5z1n32
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -40,10 +40,29 @@ INSTALLED_APPS = [
     'rest_framework',
         'accounts',
           'organizations',
+           'corsheaders',
+           'projects',
+           'tasks',
+           'drf_spectacular',
+
 
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'SaaS Project Management API',
+    'DESCRIPTION': 'Full-stack SaaS backend built with Django REST Framework',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
+
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -132,3 +151,4 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+CORS_ALLOW_ALL_ORIGINS = True

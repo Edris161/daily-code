@@ -7,7 +7,8 @@ class Organization(models.Model):
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='owned_organizations'
+        related_name='owned_organizations',null=True, blank=True
+        
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
