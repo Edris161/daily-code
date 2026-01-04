@@ -1,45 +1,28 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
-from django.shortcuts import get_object_or_404
-
 from .models import Project
 from .serializers import ProjectSerializer
-from .permissions import IsProjectOwner
 
-
-class ProjectCreateView(APIView):
+class ProjectCreateView(generics.CreateAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        serializer = ProjectSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(owner=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
-
-class ProjectListView(APIView):
+class ProjectListView(generics.ListAPIView):
+    serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, organization_id):
-        projects = Project.objects.filter(
+    def get_queryset(self):
+        organization_id = self.kwargs['organization_id']
+        return Project.objects.filter(
             organization_id=organization_id,
-            owner=request.user
+            owner=self.request.user
         )
-        serializer = ProjectSerializer(projects, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-class ProjectDeleteView(APIView):
-    permission_classes = [IsAuthenticated, IsProjectOwner]
-
-    def delete(self, request, pk):
-        project = get_object_or_404(Project, pk=pk)
-        self.check_object_permissions(request, project)
-        project.delete()
-        return Response(
-            {"message": "Project deleted successfully"},
-            status=status.HTTP_204_NO_CONTENT
-        )
+class ProjectDeleteView(generics.DestroyAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated]
