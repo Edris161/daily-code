@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Sidebar from "@/components/layout/Sidebar";
 import Table from "../../components/tables/Table";
-import Modal from "../../components/modals/Modal"
+import Modal from "../../components/modals/Modal";
+
 interface SaaSApp {
   id: number;
   name: string;
@@ -44,44 +45,82 @@ export default function AppsPage() {
 
   const handleSave = (app: SaaSApp) => {
     if (editingApp) {
-      // Edit
       setApps(apps.map((a) => (a.id === app.id ? app : a)));
     } else {
-      // Add
       setApps([...apps, { ...app, id: apps.length + 1 }]);
     }
     setIsModalOpen(false);
   };
 
+  // Highlight apps expiring in less than 30 days
+  const today = new Date();
+  const appsWithHighlight = apps.map((app) => {
+    const renewal = new Date(app.renewalDate);
+    const daysLeft = (renewal.getTime() - today.getTime()) / (1000 * 3600 * 24);
+    return { ...app, isExpiring: daysLeft <= 30 };
+  });
+
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-slate-100">
       <Sidebar />
 
-      <main className="flex-1 p-6">
+      <main className="flex-1 p-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">SaaS Inventory</h1>
+          <h1 className="text-3xl font-bold text-slate-900">SaaS Inventory</h1>
           <button
             onClick={handleAdd}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+            className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 shadow transition"
           >
             Add New App
           </button>
         </div>
 
-        <Table
-          data={apps}
-          columns={[
-            { header: "Name", accessor: "name" },
-            { header: "Category", accessor: "category" },
-            { header: "Provider", accessor: "provider" },
-            { header: "Licenses", accessor: "licenses" },
-            { header: "Cost", accessor: "cost" },
-            { header: "Renewal Date", accessor: "renewalDate" },
-            { header: "Active Users", accessor: "activeUsers" },
-          ]}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
+        <div className="bg-white rounded-2xl shadow overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                {["Name", "Category", "Provider", "Licenses", "Cost", "Renewal Date", "Active Users", "Actions"].map((header) => (
+                  <th
+                    key={header}
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {appsWithHighlight.map((app) => (
+                <tr
+                  key={app.id}
+                  className={`hover:bg-gray-50 transition ${app.isExpiring ? "bg-yellow-50" : ""}`}
+                >
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{app.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{app.category}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{app.provider}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{app.licenses}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{app.cost}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{app.renewalDate}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{app.activeUsers}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex gap-2">
+                    <button
+                      onClick={() => handleEdit(app)}
+                      className="text-blue-600 hover:underline"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(app.id)}
+                      className="text-red-600 hover:underline"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         {isModalOpen && (
           <Modal

@@ -50,40 +50,61 @@ export default function SubscriptionsPage() {
     setIsModalOpen(false);
   };
 
+  // Highlight subscriptions expiring within 30 days
+  const today = new Date();
+  const expiringThreshold = new Date();
+  expiringThreshold.setDate(today.getDate() + 30);
+
+  const displayData = subscriptions.map((s) => ({
+    ...s,
+    renewalDateDisplay:
+      new Date(s.renewalDate) < expiringThreshold
+        ? <span className="text-red-600 font-semibold">{s.renewalDate} ⚠️</span>
+        : s.renewalDate
+  }));
+
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-slate-100">
       <Sidebar />
 
-      <main className="flex-1 p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Subscriptions / Licenses</h1>
+      <main className="flex-1 p-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-semibold text-slate-900">
+              Subscriptions / Licenses
+            </h1>
+            <p className="text-sm text-slate-500 mt-1">
+              Track subscription plans, licenses, and renewal dates
+            </p>
+          </div>
+
           <button
             onClick={handleAdd}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+            className="bg-indigo-600 text-white px-5 py-2.5 rounded-lg shadow-sm
+                       hover:bg-indigo-700 transition text-sm font-medium"
           >
-            Add Subscription
+            + Add Subscription
           </button>
         </div>
 
-        <Table
-          data={subscriptions.map((s) => ({
-            ...s,
-            // Highlight expiring licenses if renewal date < 30 days
-            renewalDate: new Date(s.renewalDate) < new Date(new Date().setDate(new Date().getDate() + 30))
-              ? `${s.renewalDate} ⚠️`
-              : s.renewalDate
-          }))}
-          columns={[
-            { header: "App Name", accessor: "appName" },
-            { header: "Plan Type", accessor: "planType" },
-            { header: "Licenses", accessor: "licenses" },
-            { header: "Assigned Users", accessor: "assignedUsers" },
-            { header: "Renewal Date", accessor: "renewalDate" },
-          ]}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
+        {/* Card Container */}
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <Table
+            data={displayData}
+            columns={[
+              { header: "App Name", accessor: "appName" },
+              { header: "Plan Type", accessor: "planType" },
+              { header: "Licenses", accessor: "licenses" },
+              { header: "Assigned Users", accessor: "assignedUsers" },
+              { header: "Renewal Date", accessor: "renewalDateDisplay" },
+            ]}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        </div>
 
+        {/* Modal */}
         {isModalOpen && (
           <Modal
             {...({ subscription: editingSub, onClose: () => setIsModalOpen(false), onSave: handleSave } as any)}

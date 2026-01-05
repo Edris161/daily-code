@@ -7,41 +7,45 @@ interface TableProps {
 
 export default function Table({ data, columns, onEdit, onDelete }: TableProps) {
   return (
-    <div className="overflow-x-auto bg-white rounded-lg shadow">
+    <div className="overflow-x-auto bg-white rounded-xl shadow-lg">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
             {columns.map((col) => (
               <th
                 key={col.accessor}
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
               >
                 {col.header}
               </th>
             ))}
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
               Actions
             </th>
           </tr>
         </thead>
+
         <tbody className="bg-white divide-y divide-gray-200">
-          {data.map((row) => (
-            <tr key={row.id}>
+          {data.map((row, idx) => (
+            <tr
+              key={row.id}
+              className={`transition hover:bg-gray-50 ${idx % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
+            >
               {columns.map((col) => (
                 <td key={col.accessor} className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                   {row[col.accessor]}
                 </td>
               ))}
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex gap-2">
                 <button
                   onClick={() => onEdit(row)}
-                  className="text-blue-600 hover:text-blue-800 mr-2"
+                  className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => onDelete(row.id)}
-                  className="text-red-600 hover:text-red-800"
+                  className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition"
                 >
                   Delete
                 </button>

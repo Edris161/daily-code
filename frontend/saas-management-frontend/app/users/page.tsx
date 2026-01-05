@@ -50,32 +50,49 @@ export default function UsersPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-slate-100">
+      {/* Sticky Sidebar */}
       <Sidebar />
 
-      <main className="flex-1 p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Users & Roles</h1>
+      {/* Main Content */}
+      <main className="flex-1 p-8">
+        {/* Page Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-semibold text-slate-900">
+              Users & Roles
+            </h1>
+            <p className="text-sm text-slate-500 mt-1">
+              Manage users, roles, and assigned applications
+            </p>
+          </div>
+
           <button
             onClick={handleAdd}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+            className="bg-indigo-600 text-white px-5 py-2.5 rounded-lg
+                       shadow-sm hover:bg-indigo-700 transition
+                       text-sm font-medium"
           >
-            Add User
+            + Add User
           </button>
         </div>
 
-        <Table
-          data={users}
-          columns={[
-            { header: "Name", accessor: "name" },
-            { header: "Email", accessor: "email" },
-            { header: "Role", accessor: "role" },
-            { header: "Assigned Apps", accessor: "assignedApps" },
-          ]}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
+        {/* Card Container */}
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+          <Table
+            data={users}
+            columns={[
+              { header: "Name", accessor: "name" },
+              { header: "Email", accessor: "email" },
+              { header: "Role", accessor: "role" },
+              { header: "Assigned Apps", accessor: "assignedApps" },
+            ]}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        </div>
 
+        {/* Modal */}
         {isModalOpen && (
           <UserModal
             user={editingUser}

@@ -22,26 +22,36 @@ const sampleReports: ReportData[] = [
 export default function ReportsPage() {
   const [filterDept, setFilterDept] = useState<"All" | "HR" | "Engineering" | "Design">("All");
 
-  // Filtered data placeholder
-  const filteredReports = sampleReports; // Can filter by department when connected to backend
+  // Placeholder: filteredReports (can be dynamic later)
+  const filteredReports = sampleReports;
+
+  const departments = ["All", "HR", "Engineering", "Design"];
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-slate-100">
       <Sidebar />
 
-      <main className="flex-1 p-6">
-        <h1 className="text-3xl font-bold mb-6">Reports & Analytics</h1>
+      <main className="flex-1 p-8">
+        {/* Page Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-semibold text-slate-900 mb-1">
+            Reports & Analytics
+          </h1>
+          <p className="text-sm text-slate-500">
+            Monitor costs, license usage, and department spending trends
+          </p>
+        </div>
 
         {/* Department Filter */}
-        <div className="flex gap-2 mb-6">
-          {["All", "HR", "Engineering", "Design"].map((dept) => (
+        <div className="flex flex-wrap gap-2 mb-6">
+          {departments.map((dept) => (
             <button
               key={dept}
               onClick={() => setFilterDept(dept as any)}
-              className={`px-4 py-2 rounded ${
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
                 filterDept === dept
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  ? "bg-indigo-600 text-white shadow-sm"
+                  : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-100"
               }`}
             >
               {dept}
@@ -49,37 +59,47 @@ export default function ReportsPage() {
           ))}
         </div>
 
-        {/* Cost vs Usage Line Chart */}
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <h2 className="text-lg font-semibold mb-4">Cost vs Usage Over Time</h2>
+        {/* Line Chart: Cost vs Usage */}
+        <div className="bg-white p-6 rounded-xl shadow border border-slate-200 mb-6">
+          <h2 className="text-lg font-semibold mb-4 text-slate-900">
+            Cost vs Usage Over Time
+          </h2>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={filteredReports}>
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
+              <XAxis dataKey="month" stroke="#94a3b8" />
+              <YAxis stroke="#94a3b8" />
+              <Tooltip
+                contentStyle={{ backgroundColor: "#f1f5f9", borderRadius: 8 }}
+              />
               <Line type="monotone" dataKey="cost" stroke="#3b82f6" strokeWidth={2} />
               <Line type="monotone" dataKey="usage" stroke="#10b981" strokeWidth={2} />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
-        {/* License Utilization Bar Chart */}
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <h2 className="text-lg font-semibold mb-4">License Utilization</h2>
+        {/* Bar Chart: License Utilization */}
+        <div className="bg-white p-6 rounded-xl shadow border border-slate-200 mb-6">
+          <h2 className="text-lg font-semibold mb-4 text-slate-900">
+            License Utilization
+          </h2>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={filteredReports}>
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
+              <XAxis dataKey="month" stroke="#94a3b8" />
+              <YAxis stroke="#94a3b8" />
+              <Tooltip contentStyle={{ backgroundColor: "#f1f5f9", borderRadius: 8 }} />
               <Bar dataKey="usage" fill="#f59e0b" />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
         {/* Export Buttons */}
-        <div className="flex gap-2">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Export as PDF</button>
-          <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Export as Excel</button>
+        <div className="flex gap-3 flex-wrap">
+          <button className="px-5 py-2.5 bg-indigo-600 text-white rounded-lg shadow-sm hover:bg-indigo-700 transition text-sm font-medium">
+            Export as PDF
+          </button>
+          <button className="px-5 py-2.5 bg-green-600 text-white rounded-lg shadow-sm hover:bg-green-700 transition text-sm font-medium">
+            Export as Excel
+          </button>
         </div>
       </main>
     </div>
