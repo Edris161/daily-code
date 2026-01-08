@@ -1,26 +1,29 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView
-from rest_framework.generics import GenericAPIView
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
-# ✅ Use relative imports within the accounts app
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+
+from .models import User
 from .serializers import (
     LoginSerializer,
     UserSerializer,
     ForgotPasswordSerializer,
-    ResetPasswordSerializer
+    ResetPasswordSerializer,
+    UserListSerializer,
+    UserCreateSerializer,
+    UserUpdateSerializer,
 )
-from .models import User
 
 
-# ----------------------
-# Login API
-# ----------------------
+# =====================================================
+# PROMPT 1 — AUTH VIEWS
+# =====================================================
+
 class LoginView(APIView):
     permission_classes = []
 
@@ -42,13 +45,12 @@ class LoginView(APIView):
         })
 
 
-# ----------------------
-# Logout API
-# ----------------------
 class LogoutView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def post(self, request):
         try:
-            refresh = RefreshToken(request.data["refresh"])
+            refresh = RefreshToken(request.data.get("refresh"))
             refresh.blacklist()
             return Response({
                 "success": True,
@@ -61,57 +63,123 @@ class LogoutView(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
 
-# ----------------------
-# Token Refresh API
-# ----------------------
 class CustomTokenRefreshView(TokenRefreshView):
-    """
-    Endpoint: POST /api/auth/refresh/
-    Input: { "refresh": "<refresh_token>" }
-    Output: { "access": "<new_access_token>" }
-    """
-    pass  # Using DRF SimpleJWT default serializer
+    pass
 
 
-# ----------------------
-# Forgot Password API
-# ----------------------
-class ForgotPasswordView(GenericAPIView):
-    serializer_class = ForgotPasswordSerializer
+class ForgotPasswordView(APIView):
     permission_classes = []
 
     def post(self, request):
-        serializer = self.get_serializer(data=request.data)
+        serializer = ForgotPasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         user = User.objects.get(email=serializer.validated_data["email"])
         token = PasswordResetTokenGenerator().make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        reset_link = f"http://frontend-url/reset-password/{uid}/{token}"  # Replace with your frontend URL
 
-        # In production: send this link via email
         return Response({
             "success": True,
-            "message": f"Password reset link (send via email in production): {reset_link}"
+            "message": f"Password reset link (send via email in production): "
+                       f"http://frontend-url/reset-password/{uid}/{token}"
         })
 
 
-# ----------------------
-# Reset Password API
-# ----------------------
-class ResetPasswordView(GenericAPIView):
-    serializer_class = ResetPasswordSerializer
+class ResetPasswordView(APIView):
     permission_classes = []
 
     def post(self, request):
-        serializer = self.get_serializer(data=request.data)
+        serializer = ResetPasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        user = serializer.validated_data["user"]
-        user.set_password(serializer.validated_data["new_password"])
-        user.save()
+        serializer.save()  # Actually reset password
 
         return Response({
             "success": True,
             "message": "Password has been reset successfully"
         })
+
+
+# =====================================================
+# 🔐 PROMPT 5 — ADMIN PERMISSION
+# =====================================================
+
+class IsAdminUserRole(permissions.BasePermission):
+    """
+    Allows access only to users with role = admin
+    """
+    def has_permission(self, request, view):
+        return (
+            request.user and
+            request.user.is_authenticated and
+            request.user.role == "admin"
+        )
+
+
+# =====================================================
+# PROMPT 5 — USER MANAGEMENT VIEWS
+# =====================================================
+
+class UserListCreateView(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsAdminUserRole]
+
+    def get(self, request):
+        users = User.objects.all().order_by("-created_at")
+        serializer = UserListSerializer(users, many=True)
+        return Response({
+            "success": True,
+            "data": serializer.data
+        })
+
+    def post(self, request):
+        serializer = UserCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response({
+            "success": True,
+            "message": "User created successfully",
+            "data": serializer.data
+        }, status=status.HTTP_201_CREATED)
+
+
+class UserDetailView(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsAdminUserRole]
+
+    def get_object(self, pk):
+        try:
+            return User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return None
+
+    def put(self, request, pk):
+        user = self.get_object(pk)
+        if not user:
+            return Response(
+                {"success": False, "message": "User not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = UserUpdateSerializer(user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response({
+            "success": True,
+            "message": "User updated successfully",
+            "data": serializer.data
+        })
+
+    def delete(self, request, pk):
+        user = self.get_object(pk)
+        if not user:
+            return Response(
+                {"success": False, "message": "User not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        user.delete()
+        return Response({
+            "success": True,
+            "message": "User deleted successfully"
+        }, status=status.HTTP_204_NO_CONTENT)
