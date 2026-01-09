@@ -1,9 +1,11 @@
 import React from 'react'
-import Login from './login/page'
+
+import "@/lib/interceptor";
+
 const page = () => {
   return (
     <div>
-      <Login />
+      
     </div>
   )
 }

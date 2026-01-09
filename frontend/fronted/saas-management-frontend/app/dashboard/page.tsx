@@ -1,7 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
 import Sidebar from "@/components/layout/Sidebar";
 import Card from "@/components/cards/Card";
+
 import {
   LineChart,
   Line,
@@ -10,6 +14,8 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+
+import { getAccessToken } from "@/utils/token";
 
 const sampleData = [
   { month: "Jan", cost: 4000, licenses: 240 },
@@ -21,6 +27,30 @@ const sampleData = [
 ];
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+
+  // 🔐 Auth Guard
+  useEffect(() => {
+    const token = getAccessToken();
+
+    if (!token) {
+      router.replace("/login");
+      return;
+    }
+
+    setLoading(false);
+  }, [router]);
+
+  // ⏳ Prevent UI flash before auth check
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-slate-100">
+        <p className="text-slate-500">Loading dashboard...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen bg-slate-100">
       <Sidebar />
