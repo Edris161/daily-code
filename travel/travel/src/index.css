@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Travel Agency Design System - Warm & Adventurous */
+
+@layer base {
+  :root {
+    /* Core brand colors - Ocean Teal & Sunset Coral */
+    --background: 40 33% 98%;
+    --foreground: 210 40% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 40% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 40% 12%;
+
+    /* Primary - Deep Ocean Teal */
+    --primary: 187 60% 28%;
+    --primary-foreground: 40 33% 98%;
+
+    /* Secondary - Warm Sand */
+    --secondary: 35 30% 92%;
+    --secondary-foreground: 210 40% 12%;
+
+    /* Muted - Soft Gray */
+    --muted: 40 20% 94%;
+    --muted-foreground: 210 15% 45%;
+
+    /* Accent - Sunset Coral */
+    --accent: 15 85% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 35 20% 88%;
+    --input: 35 20% 88%;
+    --ring: 187 60% 28%;
+
+    --radius: 0.75rem;
+
+    /* Custom travel colors */
+    --ocean: 187 60% 28%;
+    --ocean-light: 187 50% 45%;
+    --coral: 15 85% 60%;
+    --coral-dark: 12 80% 50%;
+    --sand: 40 33% 98%;
+    --sand-dark: 35 25% 90%;
+    --forest: 160 40% 30%;
+    --gold: 45 90% 55%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(187 60% 28%) 0%, hsl(160 40% 30%) 100%);
+    --gradient-sunset: linear-gradient(135deg, hsl(15 85% 60%) 0%, hsl(45 90% 55%) 100%);
+    --gradient-overlay: linear-gradient(180deg, transparent 0%, hsla(210 40% 12% / 0.7) 100%);
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsla(210 40% 12% / 0.1);
+    --shadow-card: 0 10px 40px -10px hsla(210 40% 12% / 0.15);
+    --shadow-hover: 0 20px 60px -15px hsla(210 40% 12% / 0.2);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 187 60% 28%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 35 30% 92%;
+    --sidebar-accent-foreground: 210 40% 12%;
+    --sidebar-border: 35 20% 88%;
+    --sidebar-ring: 187 60% 28%;
+  }
+
+  .dark {
+    --background: 210 40% 8%;
+    --foreground: 40 33% 96%;
+
+    --card: 210 35% 12%;
+    --card-foreground: 40 33% 96%;
+
+    --popover: 210 35% 12%;
+    --popover-foreground: 40 33% 96%;
+
+    --primary: 187 50% 50%;
+    --primary-foreground: 210 40% 8%;
+
+    --secondary: 210 30% 18%;
+    --secondary-foreground: 40 33% 96%;
+
+    --muted: 210 30% 18%;
+    --muted-foreground: 210 15% 65%;
+
+    --accent: 15 80% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 25% 22%;
+    --input: 210 25% 22%;
+    --ring: 187 50% 50%;
+
+    --ocean: 187 50% 50%;
+    --ocean-light: 187 45% 60%;
+    --coral: 15 80% 55%;
+    --coral-dark: 12 75% 45%;
+    --sand: 210 40% 8%;
+    --sand-dark: 210 35% 12%;
+    --forest: 160 35% 40%;
+    --gold: 45 85% 60%;
+
+    --shadow-soft: 0 4px 20px -4px hsla(0 0% 0% / 0.3);
+    --shadow-card: 0 10px 40px -10px hsla(0 0% 0% / 0.4);
+    --shadow-hover: 0 20px 60px -15px hsla(0 0% 0% / 0.5);
+
+    --sidebar-background: 210 40% 8%;
+    --sidebar-foreground: 40 33% 96%;
+    --sidebar-primary: 187 50% 50%;
+    --sidebar-primary-foreground: 210 40% 8%;
+    --sidebar-accent: 210 30% 18%;
+    --sidebar-accent-foreground: 40 33% 96%;
+    --sidebar-border: 210 25% 22%;
+    --sidebar-ring: 187 50% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+    @apply font-semibold tracking-tight;
+  }
+
+  /* Focus styles for accessibility */
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+
+  /* Skip link for accessibility */
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md;
+  }
+}
+
+@layer components {
+  .container-wide {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-hero);
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .image-overlay {
+    @apply absolute inset-0;
+    background: var(--gradient-overlay);
+  }
+}
