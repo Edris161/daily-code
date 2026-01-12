@@ -8,6 +8,15 @@ import { Button } from '@/components/ui/button';
 import { destinations, categories, type Destination } from '@/data/destinations';
 import { cn } from '@/lib/utils';
 
+
+
+
+
+
+
+
+
+
 export default function DestinationsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
