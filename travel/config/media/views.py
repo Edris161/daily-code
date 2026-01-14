@@ -30,8 +30,8 @@ class MediaDeleteView(generics.DestroyAPIView):
         instance = self.get_object()
         
         # Check if media is being used
-        from destinations.models import Destination
-        from tours.models import Tour
+        from apps.destinations.models import Destination
+        from apps.tours.models import Tour
         
         is_used_as_cover = Destination.objects.filter(cover_image=instance).exists()
         is_used_in_gallery = instance.destination_galleries.exists()

@@ -29,12 +29,12 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     
     # API URLs
-    path('api/auth/', include('apps.accounts.urls')),
-    path('api/destinations/', include('apps.destinations.urls')),
-    path('api/tours/', include('apps.tours.urls')),
-    path('api/bookings/', include('apps.bookings.urls')),
-    path('api/reviews/', include('apps.reviews.urls')),
-    path('api/media/', include('apps.media.urls')),
+    path('api/auth/', include('accounts.urls')),
+    path('api/destinations/', include('destinations.urls')),
+    path('api/tours/', include('tours.urls')),
+    path('api/bookings/', include('bookings.urls')),
+    path('api/reviews/', include('reviews.urls')),
+    path('api/media/', include('media.urls')),
 ]
 
 # Serve media files in development
