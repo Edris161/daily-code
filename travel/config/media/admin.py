@@ -3,33 +3,32 @@ from .models import Media
 
 @admin.register(Media)
 class MediaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'file_preview', 'alt_text', 'file_type', 'file_size', 'uploaded_at')
-    list_filter = ('uploaded_at',)
+    list_display = ('id', 'get_file_type', 'alt_text', 'created_at')
+    list_filter = ('created_at',)  # Removed 'file_type' from list_filter
     search_fields = ('alt_text', 'file')
-    readonly_fields = ('file_type', 'file_size', 'uploaded_at', 'created_at', 'updated_at')
+    readonly_fields = ('get_file_type', 'get_file_url', 'created_at', 'updated_at')
     
     fieldsets = (
-        ('Media File', {
-            'fields': ('file', 'alt_text', 'uploaded_by')
+        (None, {
+            'fields': ('file', 'alt_text')
         }),
-        ('File Information', {
-            'fields': ('file_type', 'file_size')
+        ('Details', {
+            'fields': ('get_file_type', 'get_file_url')
         }),
         ('Timestamps', {
-            'fields': ('uploaded_at', 'created_at', 'updated_at'),
-            'classes': ('collapse',)
+            'fields': ('created_at', 'updated_at')
         }),
     )
     
-    def file_preview(self, obj):
-        if obj.file_type == 'image':
-            return f'<img src="{obj.file.url}" style="max-height: 50px; max-width: 50px;" />'
-        return f'📄 {obj.file.name}'
+    def get_file_type(self, obj):
+        return obj.file_type
+    get_file_type.short_description = 'File Type'
+    get_file_type.admin_order_field = 'file'  # Allows ordering by file name
     
-    file_preview.allow_tags = True
-    file_preview.short_description = 'Preview'
+    def get_file_url(self, obj):
+        return obj.file_url
+    get_file_url.short_description = 'File URL'
     
-    def file_size(self, obj):
-        return f"{obj.file_size:.2f} MB"
-    
-    file_size.short_description = 'Size'
+    def file_url(self, obj):
+        return obj.file_url
+    file_url.short_description = 'File URL'

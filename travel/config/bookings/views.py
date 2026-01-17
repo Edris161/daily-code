@@ -3,49 +3,62 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Booking
 from .serializers import (
-    BookingSerializer,
-    BookingCreateSerializer,
-    BookingStatusSerializer
+    BookingSerializer, AdminBookingSerializer, BookingStatusSerializer
 )
-from .filters import BookingFilter
+from core.permissions import IsAdmin
 
-class BookingCreateView(generics.CreateAPIView):
-    serializer_class = BookingCreateSerializer
-    permission_classes = [permissions.AllowAny]  # Allow guest bookings
+class CreateBookingView(generics.CreateAPIView):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+    permission_classes = [permissions.AllowAny]
     
-    def perform_create(self, serializer):
-        serializer.save()
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        booking = serializer.save()
+        
+        headers = self.get_success_headers(serializer.data)
+        return Response({
+            'success': True,
+            'message': 'Booking created successfully',
+            'data': serializer.data
+        }, status=status.HTTP_201_CREATED, headers=headers)
 
-class MyBookingsView(generics.ListAPIView):
+class UserBookingsView(generics.ListAPIView):
     serializer_class = BookingSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
-    filterset_class = BookingFilter
+    filterset_fields = ['status']
     
     def get_queryset(self):
         return Booking.objects.filter(user=self.request.user).select_related('tour')
 
 class AdminBookingsView(generics.ListAPIView):
-    serializer_class = BookingSerializer
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+    serializer_class = AdminBookingSerializer
+    permission_classes = [IsAdmin]
     filter_backends = [DjangoFilterBackend]
-    filterset_class = BookingFilter
+    filterset_fields = ['status', 'tour']
     
     def get_queryset(self):
         return Booking.objects.all().select_related('tour', 'user')
 
-class BookingStatusUpdateView(generics.UpdateAPIView):
-    serializer_class = BookingStatusSerializer
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+class UpdateBookingStatusView(generics.UpdateAPIView):
     queryset = Booking.objects.all()
+    serializer_class = BookingStatusSerializer
+    permission_classes = [IsAdmin]
     
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer = self.get_serializer(instance, data=request.data, partial=False)
         serializer.is_valid(raise_exception=True)
+        
+        old_status = instance.status
+        new_status = serializer.validated_data['status']
+        
         self.perform_update(serializer)
         
         return Response({
-            'message': f'Booking status updated to {instance.status}',
-            'booking': BookingSerializer(instance).data
+            'success': True,
+            'message': f'Booking status updated from {old_status} to {new_status}',
+            'data': BookingSerializer(instance).data
         })

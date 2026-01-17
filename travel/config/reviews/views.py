@@ -1,61 +1,59 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from rest_framework.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404
-from .models import Review
-from tours.models import Tour
-from .serializers import ReviewSerializer, ReviewCreateSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import Review, TourRating
+from .serializers import (
+    ReviewSerializer, TourRatingSerializer, ReviewWithTourSerializer
+)
+from core.permissions import IsOwnerOrAdmin
 
-class ReviewCreateView(generics.CreateAPIView):
-    serializer_class = ReviewCreateSerializer
+class CreateReviewView(generics.CreateAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
     permission_classes = [permissions.IsAuthenticated]
     
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        review = serializer.save()
+        
+        # Update tour rating stats
+        tour_rating, created = TourRating.objects.get_or_create(tour=review.tour)
+        tour_rating.update_stats()
+        
+        return Response({
+            'success': True,
+            'message': 'Review submitted successfully',
+            'data': serializer.data
+        }, status=status.HTTP_201_CREATED)
 
 class TourReviewsView(generics.ListAPIView):
-    serializer_class = ReviewSerializer
+    serializer_class = ReviewWithTourSerializer
+    permission_classes = [permissions.AllowAny]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['rating']
     
     def get_queryset(self):
         tour_slug = self.kwargs['tour_slug']
-        tour = get_object_or_404(Tour, slug=tour_slug)
-        return Review.objects.filter(tour=tour).select_related('user')
-    
-    def get(self, request, *args, **kwargs):
-        response = super().get(request, *args, **kwargs)
-        
-        # Get tour and calculate stats
-        tour_slug = self.kwargs['tour_slug']
-        tour = get_object_or_404(Tour, slug=tour_slug)
-        
-        from django.db.models import Avg, Count
-        stats = tour.reviews.aggregate(
-            average_rating=Avg('rating'),
-            total_reviews=Count('id')
-        )
-        
-        response.data = {
-            'tour': {
-                'id': tour.id,
-                'title': tour.title,
-                'slug': tour.slug
-            },
-            'stats': {
-                'average_rating': stats['average_rating'] or 0,
-                'total_reviews': stats['total_reviews'] or 0
-            },
-            'reviews': response.data
-        }
-        
-        return response
+        from tours.models import Tour
+        try:
+            tour = Tour.objects.get(slug=tour_slug)
+            return Review.objects.filter(tour=tour).select_related('user')
+        except Tour.DoesNotExist:
+            return Review.objects.none()
 
-class ReviewUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+class UserReviewsView(generics.ListAPIView):
     serializer_class = ReviewSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = Review.objects.all()
     
-    def get_object(self):
-        review = super().get_object()
-        if review.user != self.request.user and not self.request.user.is_staff:
-            raise PermissionDenied("You don't have permission to edit this review")
-        return review
+    def get_queryset(self):
+        return Review.objects.filter(user=self.request.user).select_related('tour')
+
+class TourRatingView(generics.RetrieveAPIView):
+    serializer_class = TourRatingSerializer
+    permission_classes = [permissions.AllowAny]
+    lookup_field = 'tour__slug'
+    lookup_url_kwarg = 'tour_slug'
+    
+    def get_queryset(self):
+        return TourRating.objects.all()

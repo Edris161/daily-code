@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.db import models
 from django.utils import timezone
 
 class UserManager(BaseUserManager):
@@ -15,8 +15,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
-        extra_fields.setdefault('role', 'ADMIN')
+        extra_fields.setdefault('role', User.ADMIN)
         
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')
@@ -26,15 +25,20 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
-    class Role(models.TextChoices):
-        ADMIN = 'ADMIN', 'Admin'
-        STAFF = 'STAFF', 'Staff'
-        CUSTOMER = 'CUSTOMER', 'Customer'
+    ADMIN = 'ADMIN'
+    STAFF = 'STAFF'
+    CUSTOMER = 'CUSTOMER'
     
-    email = models.EmailField(unique=True, db_index=True)
+    ROLE_CHOICES = [
+        (ADMIN, 'Admin'),
+        (STAFF, 'Staff'),
+        (CUSTOMER, 'Customer'),
+    ]
+    
+    email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=20, blank=True)
-    role = models.CharField(max_length=10, choices=Role.choices, default=Role.CUSTOMER)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=CUSTOMER)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -45,17 +49,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['full_name']
     
+    class Meta:
+        ordering = ['-created_at']
+    
     def __str__(self):
         return self.email
     
     @property
     def is_admin(self):
-        return self.role == self.Role.ADMIN
+        return self.role == self.ADMIN or self.is_superuser
     
     @property
-    def is_staff_member(self):
-        return self.role == self.Role.STAFF
-    
-    @property
-    def is_customer(self):
-        return self.role == self.Role.CUSTOMER
+    def is_staff_user(self):
+        return self.role == self.STAFF or self.is_admin

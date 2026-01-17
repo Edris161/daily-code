@@ -1,56 +1,46 @@
 from rest_framework import generics, filters, permissions
+from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Q
 from .models import Destination
 from .serializers import (
-    DestinationSerializer,
-    DestinationListSerializer,
+    DestinationListSerializer, DestinationDetailSerializer,
     DestinationCreateSerializer
 )
 from .filters import DestinationFilter
+from core.permissions import IsAdmin
 
-class DestinationListView(generics.ListAPIView):
-    serializer_class = DestinationListSerializer
+class DestinationListView(generics.ListCreateAPIView):
+    queryset = Destination.objects.all()
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = DestinationFilter
     search_fields = ['name', 'country', 'city', 'short_description']
-    ordering_fields = ['name', 'country', 'created_at']
-    ordering = ['-created_at']
+    ordering_fields = ['name', 'created_at']
     
-    def get_queryset(self):
-        queryset = Destination.objects.all()
-        
-        # Filter featured destinations
-        featured = self.request.query_params.get('featured', None)
-        if featured == 'true':
-            queryset = queryset.filter(is_featured=True)
-        
-        return queryset.select_related('cover_image')
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [IsAdmin()]
+        return [permissions.AllowAny()]
+    
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return DestinationCreateSerializer
+        return DestinationListSerializer
+
+class DestinationDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Destination.objects.all()
+    lookup_field = 'slug'
+    
+    def get_permissions(self):
+        if self.request.method in ['PUT', 'PATCH', 'DELETE']:
+            return [IsAdmin()]
+        return [permissions.AllowAny()]
+    
+    def get_serializer_class(self):
+        if self.request.method in ['GET', 'HEAD']:
+            return DestinationDetailSerializer
+        return DestinationCreateSerializer
 
 class FeaturedDestinationsView(generics.ListAPIView):
+    queryset = Destination.objects.filter(is_featured=True)[:6]
     serializer_class = DestinationListSerializer
     permission_classes = [permissions.AllowAny]
-    
-    def get_queryset(self):
-        return Destination.objects.filter(is_featured=True).select_related('cover_image')
-
-class DestinationDetailView(generics.RetrieveAPIView):
-    serializer_class = DestinationSerializer
-    lookup_field = 'slug'
-    queryset = Destination.objects.all()
-    
-    def get_queryset(self):
-        return Destination.objects.prefetch_related(
-            'cover_image', 
-            'gallery_images'
-        )
-
-class DestinationCreateView(generics.CreateAPIView):
-    serializer_class = DestinationCreateSerializer
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
-
-class DestinationUpdateView(generics.UpdateAPIView):
-    serializer_class = DestinationCreateSerializer
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
-    lookup_field = 'slug'
-    queryset = Destination.objects.all()

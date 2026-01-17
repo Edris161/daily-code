@@ -1,14 +1,12 @@
 from django.urls import path
 from .views import (
-    BookingCreateView,
-    MyBookingsView,
-    AdminBookingsView,
-    BookingStatusUpdateView
+    CreateBookingView, UserBookingsView, 
+    AdminBookingsView, UpdateBookingStatusView
 )
 
 urlpatterns = [
-    path('', BookingCreateView.as_view(), name='booking-create'),
-    path('my/', MyBookingsView.as_view(), name='my-bookings'),
+    path('', CreateBookingView.as_view(), name='create-booking'),
+    path('my/', UserBookingsView.as_view(), name='user-bookings'),
     path('admin/', AdminBookingsView.as_view(), name='admin-bookings'),
-    path('<int:pk>/status/', BookingStatusUpdateView.as_view(), name='booking-status-update'),
+    path('admin/<uuid:pk>/status/', UpdateBookingStatusView.as_view(), name='update-booking-status'),
 ]

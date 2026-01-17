@@ -1,12 +1,12 @@
 from django.urls import path
 from .views import (
-    ReviewCreateView,
-    TourReviewsView,
-    ReviewUpdateDeleteView
+    CreateReviewView, TourReviewsView, 
+    UserReviewsView, TourRatingView
 )
 
 urlpatterns = [
-    path('', ReviewCreateView.as_view(), name='review-create'),
+    path('', CreateReviewView.as_view(), name='create-review'),
     path('tour/<slug:tour_slug>/', TourReviewsView.as_view(), name='tour-reviews'),
-    path('<int:pk>/', ReviewUpdateDeleteView.as_view(), name='review-detail'),
+    path('my/', UserReviewsView.as_view(), name='user-reviews'),
+    path('rating/<slug:tour_slug>/', TourRatingView.as_view(), name='tour-rating'),
 ]

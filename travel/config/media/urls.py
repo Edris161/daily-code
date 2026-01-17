@@ -1,12 +1,8 @@
 from django.urls import path
-from .views import (
-    MediaUploadView,
-    MediaListView,
-    MediaDeleteView
-)
+from .views import MediaListView, UploadMediaView, DeleteMediaView
 
 urlpatterns = [
-    path('upload/', MediaUploadView.as_view(), name='media-upload'),
     path('', MediaListView.as_view(), name='media-list'),
-    path('<int:pk>/', MediaDeleteView.as_view(), name='media-delete'),
+    path('upload/', UploadMediaView.as_view(), name='upload-media'),
+    path('<uuid:pk>/', DeleteMediaView.as_view(), name='delete-media'),
 ]

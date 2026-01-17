@@ -1,35 +1,47 @@
 from django.contrib import admin
-from .models import Tour
-import json
+from django.utils.translation import gettext_lazy as _
+from .models import Tour  # Only import ONCE
 
 @admin.register(Tour)
 class TourAdmin(admin.ModelAdmin):
-    list_display = ('title', 'destination', 'price', 'duration_days', 'is_active', 'created_at')
+    list_display = ('title', 'destination', 'duration_days', 'price', 
+                    'available_seats', 'is_active', 'created_at')
     list_filter = ('is_active', 'destination', 'currency')
     search_fields = ('title', 'description', 'destination__name')
     prepopulated_fields = {'slug': ('title',)}
-    readonly_fields = ('created_at', 'updated_at')
+    readonly_fields = ('available_seats', 'created_at', 'updated_at')
     
     fieldsets = (
-        ('Basic Information', {
-            'fields': ('destination', 'title', 'slug', 'description')
+        (None, {
+            'fields': ('destination', 'title', 'slug')
         }),
-        ('Pricing & Duration', {
-            'fields': ('duration_days', 'price', 'currency', 'max_people')
+        ('Details', {
+            'fields': ('description', 'duration_days', 'price', 'currency')
         }),
-        ('Dates & Services', {
+        ('Capacity', {
+            'fields': ('max_people', 'available_seats')
+        }),
+        ('Services', {
             'fields': ('start_dates', 'included_services', 'excluded_services')
         }),
-        ('Settings', {
-            'fields': ('is_active',)
-        }),
-        ('Timestamps', {
-            'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',)
+        ('Status', {
+            'fields': ('is_active', 'created_at', 'updated_at')
         }),
     )
     
-    def formfield_for_dbfield(self, db_field, request, **kwargs):
-        if db_field.name in ['start_dates', 'included_services', 'excluded_services']:
-            kwargs['widget'] = admin.widgets.AdminTextareaWidget
-        return super().formfield_for_dbfield(db_field, request, **kwargs)
+    actions = ['activate_tours', 'deactivate_tours']
+    
+    def activate_tours(self, request, queryset):
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f'{updated} tours activated.')
+    activate_tours.short_description = _("Activate selected tours")
+    
+    def deactivate_tours(self, request, queryset):
+        updated = queryset.update(is_active=False)
+        self.message_user(request, f'{updated} tours deactivated.')
+    deactivate_tours.short_description = _("Deactivate selected tours")
+    
+    def get_queryset(self, request):
+        """Optimize database queries."""
+        queryset = super().get_queryset(request)
+        return queryset.select_related('destination')
