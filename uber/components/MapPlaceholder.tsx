@@ -94,15 +94,16 @@ const MapPlaceholder: React.FC<MapPlaceholderProps> = ({
 
         {/* Animated Car */}
         {showCar && (
-          <motion.div
-            animate={{ left: `${carPosition}%` }}
-            transition={{ duration: 0.05, ease: 'linear' }}
-            className="absolute top-1/2 -translate-y-1/2"
-          >
-            <div className="bg-black text-white rounded-lg w-8 h-5 flex items-center justify-center text-xs font-bold shadow-lg transform -rotate-45">
-              🚗
-            </div>
-          </motion.div>
+          <div className="absolute top-1/2 -translate-y-1/2">
+            <motion.div
+              animate={{ left: `${carPosition}%` }}
+              transition={{ duration: 0.05, ease: 'linear' }}
+            >
+              <div className="bg-black text-white rounded-lg w-8 h-5 flex items-center justify-center text-xs font-bold shadow-lg transform -rotate-45">
+                🚗
+              </div>
+            </motion.div>
+          </div>
         )}
       </div>
 
