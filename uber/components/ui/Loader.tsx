@@ -22,8 +22,13 @@ const Loader: React.FC<LoaderProps> = ({ size = 'md', text = 'Loading...' }) => 
       <motion.div
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-        className="border-4 border-gray-300 border-t-black rounded-full"
-        style={{ width: loaderSize, height: loaderSize }}
+        style={{
+          width: loaderSize,
+          height: loaderSize,
+          borderRadius: '50%',
+          border: '4px solid #e5e5e5',
+          borderTop: '4px solid #000000',
+        }}
       />
       {text && <p className="text-gray-600 font-medium">{text}</p>}
     </div>
