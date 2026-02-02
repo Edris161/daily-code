@@ -19,7 +19,16 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/app/*": ["./app/*"],
+      "@/components/*": ["./app/components/*"],
+      "@/hooks/*": ["./app/hooks/*"],
+      "@/services/*": ["./app/services/*"],
+      "@/store/*": ["./app/store/*"],
+      "@/types/*": ["./app/types/*"],
+      "@/utils/*": ["./app/utils/*"],
+      "@/constants/*": ["./app/constants/*"],
+      "@/styles/*": ["./app/styles/*"]
     }
   },
   "include": [

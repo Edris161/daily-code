@@ -1,31 +1,8 @@
 import Link from 'next/link';
 
-export default function Home() {
+export default function PublicHome() {
   return (
     <div className="bg-background">
-      {/* Navigation */}
-      <nav className="border-b border-border-default bg-background sticky top-0 z-40">
-        <div className="container-responsive py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-primary">Alibaba</h1>
-            <div className="space-x-4">
-              <Link
-                href="/auth/login"
-                className="inline-block px-4 py-2 text-foreground hover:text-primary transition-colors"
-              >
-                Login
-              </Link>
-              <Link
-                href="/auth/register"
-                className="inline-block px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
-              >
-                Register
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section */}
       <section className="container-responsive py-20 text-center">
         <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -37,14 +14,14 @@ export default function Home() {
         </p>
         <div className="space-x-4">
           <Link
-            href="/(public)/products"
-            className="inline-block px-8 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-medium"
+            href="/products"
+            className="inline-block px-8 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
           >
             Start Shopping
           </Link>
           <Link
-            href="/auth/register"
-            className="inline-block px-8 py-3 border border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors font-medium"
+            href="/register?role=seller"
+            className="inline-block px-8 py-3 border border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors"
           >
             Become a Seller
           </Link>
@@ -82,13 +59,13 @@ export default function Home() {
           </p>
           <div className="space-x-4">
             <Link
-              href="/auth/register"
+              href="/register?role=buyer"
               className="inline-block px-8 py-3 bg-white text-primary rounded-lg hover:bg-neutral-100 transition-colors font-semibold"
             >
               Register as Buyer
             </Link>
             <Link
-              href="/auth/register"
+              href="/register?role=seller"
               className="inline-block px-8 py-3 border-2 border-white text-white rounded-lg hover:bg-primary-dark transition-colors font-semibold"
             >
               Register as Seller
@@ -96,13 +73,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="border-t border-border-default bg-background py-12 mt-20">
-        <div className="container-responsive text-center">
-          <p className="text-text-secondary">© 2025 Alibaba. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }
