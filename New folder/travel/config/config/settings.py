@@ -3,7 +3,6 @@ Django settings for travel agency project.
 """
 import os
 from pathlib import Path
-from decouple import config
 from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
