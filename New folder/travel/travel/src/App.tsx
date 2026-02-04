@@ -11,6 +11,16 @@ import BookingPage from "./pages/BookingPage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import NotFound from "./pages/NotFound";
+import { useFeaturedDestinations } from './hooks/useDestinations';
+import { useTours } from '@/hooks/useTours';
+import Link from 'next/link';
+import { MapPin, Calendar, Users, Star } from 'lucide-react';
+
+export default function HomePage() {
+  const { data: destinations, isLoading: destinationsLoading } = useFeaturedDestinations();
+  const { data: tours, isLoading: toursLoading } = useTours({ page_size: 3 });
+
+
 
 const queryClient = new QueryClient();
 
