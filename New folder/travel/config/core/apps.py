@@ -3,4 +3,4 @@ from django.apps import AppConfig
 class CoreConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'core'
-    label = 'my_core'  # این خط رو اضافه کنید
+    verbose_name = 'Core'

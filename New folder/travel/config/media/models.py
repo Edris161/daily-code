@@ -1,30 +1,61 @@
 from django.db import models
-from core.models import TimeStampedModel
+import os
 import uuid
 
-class Media(TimeStampedModel):
+def upload_to(instance, filename):
+    """Generate upload path for media files"""
+    ext = filename.split('.')[-1]
+    filename = f"{uuid.uuid4()}.{ext}"
+    
+    if hasattr(instance, 'destination'):
+        return os.path.join('destinations', filename)
+    elif hasattr(instance, 'tour'):
+        return os.path.join('tours', filename)
+    else:
+        return os.path.join('general', filename)
+
+class Media(models.Model):
+    """Media model for storing images"""
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    file = models.FileField(upload_to='uploads/')
-    alt_text = models.CharField(max_length=255, blank=True)
+    file = models.ImageField(upload_to=upload_to)
+    alt_text = models.CharField(max_length=255, blank=True, null=True)
+    uploaded_by = models.ForeignKey(
+        'accounts.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='uploaded_media'
+    )
+    uploaded_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['-uploaded_at']
         verbose_name = 'Media'
         verbose_name_plural = 'Media'
     
     def __str__(self):
-        return self.file.name
+        return f"{self.file.name} ({self.uploaded_at.date()})"
+    
+    @property
+    def filename(self):
+        """Get filename without path"""
+        return os.path.basename(self.file.name)
+    
+    @property
+    def file_size(self):
+        """Get file size in KB"""
+        try:
+            return self.file.size / 1024  # Convert to KB
+        except:
+            return 0
     
     @property
     def file_type(self):
-        if self.file.name.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp')):
-            return 'image'
-        elif self.file.name.lower().endswith(('.mp4', '.avi', '.mov', '.mkv')):
-            return 'video'
-        elif self.file.name.lower().endswith(('.pdf', '.doc', '.docx')):
-            return 'document'
-        return 'other'
+        """Get file type"""
+        return self.file.name.split('.')[-1].lower()
     
-    @property
-    def file_url(self):
-        return self.file.url if self.file else None
+    def delete(self, *args, **kwargs):
+        """Delete file from storage when model is deleted"""
+        storage, path = self.file.storage, self.file.path
+        super().delete(*args, **kwargs)
+        storage.delete(path)

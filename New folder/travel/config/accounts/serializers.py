@@ -1,70 +1,78 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from django.contrib.auth.password_validation import validate_password
+from django.utils.translation import gettext_lazy as _
 from .models import User
 
+class UserSerializer(serializers.ModelSerializer):
+    """Serializer for User model"""
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'full_name', 'phone_number', 
+                 'role', 'is_active', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'role', 'is_active', 'created_at', 'updated_at']
+
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-    password2 = serializers.CharField(write_only=True, required=True)
+    """Serializer for user registration"""
+    password = serializers.CharField(write_only=True, min_length=8)
+    password_confirm = serializers.CharField(write_only=True, min_length=8)
     
     class Meta:
         model = User
-        fields = ('email', 'password', 'password2', 'full_name', 'phone_number')
+        fields = ['email', 'full_name', 'phone_number', 'password', 'password_confirm']
     
-    def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError({"password": "Password fields don't match."})
-        return attrs
+    def validate(self, data):
+        """Validate registration data"""
+        if data['password'] != data['password_confirm']:
+            raise serializers.ValidationError({"password": "Passwords don't match."})
+        return data
     
     def create(self, validated_data):
-        validated_data.pop('password2')
-        user = User.objects.create_user(**validated_data)
+        """Create a new user"""
+        validated_data.pop('password_confirm')
+        user = User.objects.create_user(
+            email=validated_data['email'],
+            password=validated_data['password'],
+            full_name=validated_data['full_name'],
+            phone_number=validated_data.get('phone_number', '')
+        )
         return user
 
 class LoginSerializer(serializers.Serializer):
+    """Serializer for user login"""
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
     
-    def validate(self, attrs):
-        email = attrs.get('email')
-        password = attrs.get('password')
+    def validate(self, data):
+        """Validate login credentials"""
+        email = data.get('email')
+        password = data.get('password')
         
         if email and password:
-            user = authenticate(request=self.context.get('request'), email=email, password=password)
+            user = authenticate(request=self.context.get('request'),
+                              email=email, password=password)
             if not user:
-                raise serializers.ValidationError("Invalid email or password.")
-            if not user.is_active:
-                raise serializers.ValidationError("Account is disabled.")
+                raise serializers.ValidationError(
+                    _("Unable to log in with provided credentials."),
+                    code='authorization'
+                )
         else:
-            raise serializers.ValidationError("Must include 'email' and 'password'.")
+            raise serializers.ValidationError(
+                _("Must include 'email' and 'password'."),
+                code='authorization'
+            )
         
-        attrs['user'] = user
-        return attrs
+        data['user'] = user
+        return data
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    """Serializer for updating user profile"""
     class Meta:
         model = User
-        fields = ('id', 'email', 'full_name', 'phone_number', 'role', 'created_at', 'updated_at')
-        read_only_fields = ('id', 'email', 'role', 'created_at', 'updated_at')
-
-class ChangePasswordSerializer(serializers.Serializer):
-    old_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(required=True, validators=[validate_password])
-    confirm_password = serializers.CharField(required=True)
+        fields = ['full_name', 'phone_number']
     
-    def validate(self, attrs):
-        if attrs['new_password'] != attrs['confirm_password']:
-            raise serializers.ValidationError({"new_password": "Password fields don't match."})
-        return attrs
-    
-    def validate_old_password(self, value):
-        user = self.context['request'].user
-        if not user.check_password(value):
-            raise serializers.ValidationError("Old password is incorrect.")
-        return value
-    
-    def save(self, **kwargs):
-        user = self.context['request'].user
-        user.set_password(self.validated_data['new_password'])
-        user.save()
-        return user
+    def update(self, instance, validated_data):
+        """Update user profile"""
+        instance.full_name = validated_data.get('full_name', instance.full_name)
+        instance.phone_number = validated_data.get('phone_number', instance.phone_number)
+        instance.save()
+        return instance

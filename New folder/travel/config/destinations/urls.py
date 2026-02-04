@@ -1,5 +1,9 @@
 from django.urls import path
-from .views import DestinationListView, DestinationDetailView, FeaturedDestinationsView
+from .views import (
+    DestinationListView,
+    FeaturedDestinationsView,
+    DestinationDetailView
+)
 
 urlpatterns = [
     path('', DestinationListView.as_view(), name='destination-list'),

@@ -1,47 +1,45 @@
 from django.contrib import admin
-from django.utils.translation import gettext_lazy as _
-from .models import Tour  # Only import ONCE
+from django.utils.html import format_html
+from .models import Tour, TourGallery
+
+class TourGalleryInline(admin.TabularInline):
+    """Inline for tour gallery images"""
+    model = TourGallery
+    extra = 1
+    fields = ['image', 'order', 'created_at']
+    readonly_fields = ['created_at']
 
 @admin.register(Tour)
 class TourAdmin(admin.ModelAdmin):
-    list_display = ('title', 'destination', 'duration_days', 'price', 
-                    'available_seats', 'is_active', 'created_at')
-    list_filter = ('is_active', 'destination', 'currency')
-    search_fields = ('title', 'description', 'destination__name')
-    prepopulated_fields = {'slug': ('title',)}
-    readonly_fields = ('available_seats', 'created_at', 'updated_at')
-    
+    """Admin for Tour model"""
+    list_display = ['title', 'destination', 'price', 'duration_days', 'is_active', 'created_at']
+    list_filter = ['destination', 'is_active', 'created_at']
+    search_fields = ['title', 'description', 'destination__name']
+    prepopulated_fields = {'slug': ['title']}
+    readonly_fields = ['created_at', 'updated_at', 'available_spots']
     fieldsets = (
-        (None, {
-            'fields': ('destination', 'title', 'slug')
+        ('Basic Information', {
+            'fields': ('destination', 'title', 'slug', 'description')
         }),
-        ('Details', {
-            'fields': ('description', 'duration_days', 'price', 'currency')
+        ('Pricing & Duration', {
+            'fields': ('duration_days', 'price', 'currency')
         }),
-        ('Capacity', {
-            'fields': ('max_people', 'available_seats')
+        ('Capacity & Dates', {
+            'fields': ('max_people', 'available_spots', 'start_dates')
         }),
         ('Services', {
-            'fields': ('start_dates', 'included_services', 'excluded_services')
+            'fields': ('included_services', 'excluded_services')
         }),
-        ('Status', {
-            'fields': ('is_active', 'created_at', 'updated_at')
+        ('Settings', {
+            'fields': ('is_active',)
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
         }),
     )
+    inlines = [TourGalleryInline]
     
-    actions = ['activate_tours', 'deactivate_tours']
-    
-    def activate_tours(self, request, queryset):
-        updated = queryset.update(is_active=True)
-        self.message_user(request, f'{updated} tours activated.')
-    activate_tours.short_description = _("Activate selected tours")
-    
-    def deactivate_tours(self, request, queryset):
-        updated = queryset.update(is_active=False)
-        self.message_user(request, f'{updated} tours deactivated.')
-    deactivate_tours.short_description = _("Deactivate selected tours")
-    
-    def get_queryset(self, request):
-        """Optimize database queries."""
-        queryset = super().get_queryset(request)
-        return queryset.select_related('destination')
+    def available_spots(self, obj):
+        return obj.available_spots
+    available_spots.short_description = 'Available Spots'
