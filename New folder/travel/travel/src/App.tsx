@@ -1,49 +1,54 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import DestinationsPage from "./pages/DestinationsPage";
-import DestinationDetailPage from "./pages/DestinationDetailPage";
-import ToursPage from "./pages/ToursPage";
-import BookingPage from "./pages/BookingPage";
-import AboutPage from "./pages/AboutPage";
-import ContactPage from "./pages/ContactPage";
-import NotFound from "./pages/NotFound";
-import { useFeaturedDestinations } from './hooks/useDestinations';
-import { useTours } from '@/hooks/useTours';
-import Link from 'next/link';
-import { MapPin, Calendar, Users, Star } from 'lucide-react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import DestinationsPage from './pages/DestinationsPage';
+import ToursPage from './pages/ToursPage';
+import { AuthProvider } from './../providers/AuthProvider';
 
-export default function HomePage() {
-  const { data: destinations, isLoading: destinationsLoading } = useFeaturedDestinations();
-  const { data: tours, isLoading: toursLoading } = useTours({ page_size: 3 });
+// Create a client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <Router>
+          <div className="min-h-screen flex flex-col">
+            <Navbar />
+            <main className="flex-grow">
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/auth/login" element={<LoginPage />} />
+                <Route path="/auth/register" element={<RegisterPage />} />
+                <Route path="/destinations" element={<DestinationsPage />} />
+                <Route path="/destinations/:slug" element={<DestinationsPage />} />
+                <Route path="/tours" element={<ToursPage />} />
+                <Route path="/tours/:slug" element={<ToursPage />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+        </Router>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </AuthProvider>
+    </QueryClientProvider>
+  );
+}
 
-
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/destinations" element={<DestinationsPage />} />
-          <Route path="/destinations/:id" element={<DestinationDetailPage />} />
-          <Route path="/tours" element={<ToursPage />} />
-          <Route path="/booking" element={<BookingPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
-
+// ✅ CORRECT: export default is at MODULE LEVEL, not inside function
 export default App;
