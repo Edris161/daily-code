@@ -1,0 +1,26 @@
+{
+  "Home": {
+    "title": "Find Your Perfect Apartment",
+    "subtitle": "Browse thousands of verified apartments for rent",
+    "search": "Search",
+    "featured": "Featured Listings"
+  },
+  "Navigation": {
+    "home": "Home",
+    "listings": "Listings",
+    "about": "About",
+    "contact": "Contact",
+    "dashboard": "Dashboard",
+    "login": "Login",
+    "register": "Register"
+  },
+  "Auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?"
+  }
+}
