@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --bg-from: #0b66d1;
+  --bg-to: #0b3a8a;
+  --bg-overlay-from: rgba(11,102,209,0.55);
+  --bg-overlay-to: rgba(11,58,138,0.6);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Decorative blurred color blobs for a modern, premium background */
+body::before {
+  content: "";
+  position: fixed;
+  left: -8vw;
+  top: -12vh;
+  width: 60vw;
+  height: 60vh;
+  background: radial-gradient(circle at 20% 20%, rgba(11,99,216,0.20), rgba(11,99,216,0.08) 30%, transparent 60%), radial-gradient(circle at 80% 80%, rgba(255,181,0,0.16), rgba(255,181,0,0.06) 30%, transparent 60%);
+  filter: blur(80px) saturate(120%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  right: -6vw;
+  bottom: -8vh;
+  width: 50vw;
+  height: 55vh;
+  background: radial-gradient(circle at 30% 30%, rgba(203,77,255,0.12), rgba(203,77,255,0.06) 25%, transparent 60%);
+  filter: blur(100px) saturate(110%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Subtle paper/noise texture overlay to give depth */
+.site-texture {
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Optional background frame / image layer with a slow pan animation. Put an image named `bg-frame.jpg` or `bg-frame.png` in `/public/` to use it. */
+.site-bg-frame {
+  display: none !important;
+}
+
+@keyframes bg-pan {
+  0% { background-position: 50% 40%, center; }
+  50% { background-position: 50% 60%, center; }
+  100% { background-position: 50% 40%, center; }
+}
+
+/* Design system tokens */
+:root {
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --shadow-sm: 0 6px 18px rgba(2,6,23,0.08);
+  --shadow-md: 0 12px 30px rgba(2,6,23,0.12);
+  --glass: rgba(255,255,255,0.6);
+  --font-heading: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; border-radius: var(--radius-lg); font-weight: 600; padding: .65rem 1rem; }
+.btn-primary { background: linear-gradient(90deg,var(--accent-2),#ffb300); color: #071133; box-shadow: var(--shadow-sm); }
+.btn-secondary { background: transparent; border: 1px solid rgba(7,17,51,0.06); color: #071133; }
+.btn-ghost { background: rgba(255,255,255,0.9); color: #071133; border-radius: 9999px; }
+
+/* Shared card styles for smooth hover/color effects */
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(15,23,42,0.04);
+  transition: transform 350ms cubic-bezier(.2,.9,.2,1), box-shadow 350ms cubic-bezier(.2,.9,.2,1), color 250ms ease, background-color 350ms ease, border-color 250ms ease;
+  will-change: transform, box-shadow;
+}
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: var(--shadow-md);
+}
+.card .card-overlay {
+  transition: opacity 350ms ease, transform 450ms ease;
+}
+.card-hover-color {
+  background-image: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(99,102,241,0.04));
+}
+
+/* Themed card uses site gradient colors subtly via an overlay pseudo-element */
+.card.themed {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--bg-from, #0b66d1), var(--bg-to, #0b3a8a));
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 12px 30px rgba(11,66,150,0.08);
+}
+
+/* remove separate overlay now that card itself is a gradient */
+.card.themed::before { display: none; }
+
+/* Ensure text and common elements have good contrast on gradient cards */
+.card.themed h3, .card.themed cite, .card.themed blockquote {
+  color: #ffffff;
+}
+.card.themed p, .card.themed .text-gray-700, .card.themed .text-gray-600 {
+  color: rgba(255,255,255,0.92);
+}
+
+/* Level badges and inline small elements */
+.card.themed .inline-flex, .card.themed span.inline-flex {
+  background: rgba(255,255,255,0.12) !important;
+  color: #ffffff !important;
+  border-color: rgba(255,255,255,0.12) !important;
+}
+
+/* Buttons inside themed cards: make them slightly translucent for contrast */
+.card.themed button, .card.themed a.button {
+  box-shadow: 0 8px 20px rgba(2,6,23,0.12);
+}
+
+.card.themed:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 18px 40px rgba(11,66,150,0.12);
+}
+
+/* Utility */
+/* end of globals.css */
