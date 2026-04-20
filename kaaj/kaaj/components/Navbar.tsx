@@ -23,12 +23,12 @@ export default function Navbar() {
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         {/* Left: Logo */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-700 to-purple-600 grid place-items-center text-white shadow-lg">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-700 to-blue-600 grid place-items-center text-white shadow-lg">
             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6l4 2" />
             </svg>
           </div>
-          <Link href="/" className="text-lg font-semibold text-indigo-700">Kaaj English</Link>
+          <Link href="/" className="text-lg font-semibold text-blue-600">Kaaj English</Link>
         </div>
 
         {/* Center: pill nav */}
@@ -47,7 +47,7 @@ export default function Navbar() {
 
         {/* Right: CTA */}
         <div className="flex items-center gap-3">
-          <Link href="/apply" className="hidden md:inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-5 py-2 rounded-full shadow-lg font-semibold">
+          <Link href="/apply" className="hidden md:inline-flex items-center gap-2 btn btn-primary rounded-full px-5 py-2 shadow-lg font-semibold">
             Apply Now
           </Link>
 
@@ -73,7 +73,7 @@ export default function Navbar() {
                 {l.label}
               </Link>
             ))}
-            <Link href="/apply" className="block mt-2 px-4 py-2 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-center font-semibold" onClick={() => setIsOpen(false)}>Apply Now</Link>
+            <Link href="/apply" className="block mt-2 px-4 py-2 rounded-full btn btn-primary text-center font-semibold" onClick={() => setIsOpen(false)}>Apply Now</Link>
           </div>
         </div>
       )}

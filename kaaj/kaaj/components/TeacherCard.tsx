@@ -21,7 +21,7 @@ export default function TeacherCard({ name, title, image = '/placeholder.jpg', t
       viewport={{ once: true }}
     >
       {/* Background gradient overlay */}
-      <div className="absolute inset-0 card-overlay bg-gradient-to-br from-yellow-50 to-blue-50 opacity-0 group-hover:opacity-80"></div>
+      <div className="absolute inset-0 card-overlay bg-gradient-to-br from-blue-50 to-transparent opacity-0 group-hover:opacity-80"></div>
 
       {/* Profile Image */}
       <div className="relative z-10 mb-4">
@@ -31,7 +31,7 @@ export default function TeacherCard({ name, title, image = '/placeholder.jpg', t
             alt={name}
             className="w-20 h-20 rounded-full mx-auto border-4 border-blue-100 shadow-lg object-cover"
           />
-          <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center shadow-md">
+          <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center shadow-md">
             <span className="text-white text-xs">👨‍🏫</span>
           </div>
         </motion.div>
@@ -50,7 +50,7 @@ export default function TeacherCard({ name, title, image = '/placeholder.jpg', t
       {/* Experience indicator */}
       <div className="relative z-10 flex justify-center items-center gap-1 mb-3">
         {[...Array(5)].map((_, i) => (
-          <span key={i} className="text-yellow-400 text-sm">⭐</span>
+          <span key={i} className="text-blue-500 text-sm">★</span>
         ))}
         <span className="text-gray-500 text-xs ml-2">(4.9/5.0)</span>
       </div>
@@ -63,7 +63,7 @@ export default function TeacherCard({ name, title, image = '/placeholder.jpg', t
 
       {/* Decorative elements */}
       <div className="absolute top-4 right-4 w-8 h-8 bg-blue-100 rounded-full opacity-20 group-hover:opacity-40 transition-opacity"></div>
-      <div className="absolute bottom-4 left-4 w-4 h-4 bg-yellow-200 rounded-full opacity-40 group-hover:opacity-60 transition-opacity"></div>
+      <div className="absolute bottom-4 left-4 w-4 h-4 bg-blue-100 rounded-full opacity-40 group-hover:opacity-60 transition-opacity"></div>
     </motion.div>
   );
 }

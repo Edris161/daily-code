@@ -1,22 +1,49 @@
 import SectionTitle from "../../components/SectionTitle";
-import CourseCard from "../../components/CourseCard";
+import CourseCardPremium from "../../components/CourseCardPremium";
 
 export default function Courses() {
   const courses = [
-    { title: "TOEFL Preparation", description: "Intensive training for TOEFL exam success.", level: "Intermediate/Advanced" },
-    { title: "Beginner English", description: "Perfect for those starting their English journey. Covers basic vocabulary, grammar, and conversation.", level: "Beginner" },
-    { title: "Intermediate English", description: "Build on your foundation with more complex grammar, reading, and writing skills.", level: "Intermediate" },
-    { title: "Advanced English", description: "Master advanced topics including idioms, professional communication, and literature.", level: "Advanced" },
-    { title: "Business English", description: "Specialized course for professional communication, emails, and presentations.", level: "Intermediate/Advanced" },
-    { title: "IELTS Preparation", description: "Comprehensive preparation for IELTS exam with practice tests and strategies.", level: "Intermediate/Advanced" },
+    {
+      level: 'Beginner',
+      title: 'Beginner English Course',
+      description: 'Perfect for students starting from zero. Learn basic grammar, vocabulary, and speaking skills.',
+      features: ['Speaking practice', 'Grammar basics', 'Vocabulary building', 'Interactive classes'],
+      duration: 'Duration: 3 Months · Classes: 3x/week',
+    },
+    {
+      level: 'Intermediate',
+      title: 'Intermediate English Course',
+      description: 'For learners who have basics and want to build confidence in speaking and academic skills.',
+      features: ['Fluency drills', 'Complex grammar', 'Reading & writing', 'Exam strategies'],
+      duration: 'Duration: 4 Months · Classes: 3x/week',
+      highlighted: true,
+    },
+    {
+      level: 'Advanced',
+      title: 'Advanced English Course',
+      description: 'Master advanced communication, professional English, and critical reading.',
+      features: ['Advanced speaking', 'Professional writing', 'Presentation skills', 'Literature & analysis'],
+      duration: 'Duration: 3 Months · Classes: 2x/week',
+    },
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <SectionTitle title="Our Courses" subtitle="Choose the course that fits your level and goals" />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {courses.map((course, index) => (
-          <CourseCard key={index} title={course.title} description={course.description} level={course.level} />
+    <div dir="auto" className="container mx-auto px-4 py-12">
+      <div className="max-w-3xl mx-auto text-center">
+        <SectionTitle title="Our English Courses" subtitle="Choose the right course for your level and start improving your English today." />
+      </div>
+
+      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {courses.map((c) => (
+          <CourseCardPremium
+            key={c.title}
+            level={c.level}
+            title={c.title}
+            description={c.description}
+            features={c.features}
+            duration={c.duration}
+            highlighted={Boolean((c as any).highlighted)}
+          />
         ))}
       </div>
     </div>

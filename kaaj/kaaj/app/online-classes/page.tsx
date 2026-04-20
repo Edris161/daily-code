@@ -35,7 +35,7 @@ export default function OnlineClasses() {
           <h3 className="text-xl font-semibold text-blue-600 mb-4">Ready to Start Online Learning?</h3>
           <p className="text-gray-700 mb-6">Contact us to enroll in our online courses.</p>
           <a href="/apply" className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 mr-4">Apply Now</a>
-          <a href="/contact" className="bg-yellow-400 text-black px-6 py-3 rounded-lg font-semibold hover:bg-yellow-500">Contact Us</a>
+          <a href="/contact" className="btn btn-primary px-6 py-3">Contact Us</a>
         </div>
       </div>
     </div>

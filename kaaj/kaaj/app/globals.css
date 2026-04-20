@@ -3,10 +3,15 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --bg-from: #0b66d1;
-  --bg-to: #0b3a8a;
-  --bg-overlay-from: rgba(11,102,209,0.55);
-  --bg-overlay-to: rgba(11,58,138,0.6);
+  /* Brand colors */
+  --brand-blue: #2563EB; /* primary */
+  --brand-blue-dark: #1E40AF; /* dark */
+  --brand-yellow: #FACC15; /* accent */
+  --brand-yellow-hover: #EAB308;
+  --bg-from: var(--brand-blue);
+  --bg-to: var(--brand-blue-dark);
+  --bg-overlay-from: rgba(37,99,235,0.55);
+  --bg-overlay-to: rgba(30,64,175,0.6);
 }
 
 @theme inline {
@@ -18,8 +23,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ffffff;
+    --foreground: #171717;
   }
 }
 
@@ -42,7 +47,7 @@ body::before {
   top: -12vh;
   width: 60vw;
   height: 60vh;
-  background: radial-gradient(circle at 20% 20%, rgba(11,99,216,0.20), rgba(11,99,216,0.08) 30%, transparent 60%), radial-gradient(circle at 80% 80%, rgba(255,181,0,0.16), rgba(255,181,0,0.06) 30%, transparent 60%);
+  background: radial-gradient(circle at 20% 20%, rgba(37,99,235,0.18), rgba(37,99,235,0.08) 30%, transparent 60%), radial-gradient(circle at 80% 80%, rgba(250,204,21,0.12), rgba(250,204,21,0.04) 30%, transparent 60%);
   filter: blur(80px) saturate(120%);
   pointer-events: none;
   z-index: -1;
@@ -97,9 +102,13 @@ body::after {
 
 /* Buttons */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; border-radius: var(--radius-lg); font-weight: 600; padding: .65rem 1rem; }
-.btn-primary { background: linear-gradient(90deg,var(--accent-2),#ffb300); color: #071133; box-shadow: var(--shadow-sm); }
-.btn-secondary { background: transparent; border: 1px solid rgba(7,17,51,0.06); color: #071133; }
-.btn-ghost { background: rgba(255,255,255,0.9); color: #071133; border-radius: 9999px; }
+.btn-primary { background: var(--brand-yellow); color: #000000; box-shadow: var(--shadow-sm); }
+.btn-primary:hover { background: var(--brand-yellow-hover); }
+.btn-secondary { background: transparent; border: 1px solid rgba(7,17,51,0.06); color: var(--brand-blue); }
+.btn-ghost { background: rgba(255,255,255,0.9); color: var(--brand-blue); border-radius: 9999px; }
+
+/* Glassmorphism helper */
+.glass-card { background: rgba(255,255,255,0.06); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.12); border-radius: 1rem; box-shadow: var(--shadow-md); }
 
 /* Shared card styles for smooth hover/color effects */
 .card {
@@ -160,4 +169,20 @@ body::after {
 }
 
 /* Utility */
+/* brand helpers */
+.text-brand-blue { color: var(--brand-blue); }
+.feature-card {
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.06);
+}
+.feature-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-yellow);
+}
 /* end of globals.css */

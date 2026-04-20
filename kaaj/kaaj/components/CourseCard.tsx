@@ -15,9 +15,9 @@ export default function CourseCard({ title, description, level, themed = false }
       case 'beginner':
         return 'bg-green-100 text-green-800 border-green-200';
       case 'intermediate':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        return 'bg-blue-50 text-blue-800 border-blue-100';
       case 'advanced':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-blue-100 text-blue-900 border-blue-200';
       default:
         return 'bg-blue-100 text-blue-800 border-blue-200';
     }
@@ -79,7 +79,7 @@ export default function CourseCard({ title, description, level, themed = false }
 
       {/* Decorative elements */}
       <div className="absolute top-3 right-3 w-12 h-12 bg-blue-100 rounded-full opacity-20 group-hover:opacity-30 transition-opacity"></div>
-      <div className="absolute bottom-3 left-3 w-6 h-6 bg-yellow-200 rounded-full opacity-30 group-hover:opacity-50 transition-opacity"></div>
+      <div className="absolute bottom-3 left-3 w-6 h-6 bg-blue-100 rounded-full opacity-30 group-hover:opacity-50 transition-opacity"></div>
     </motion.div>
   );
 }

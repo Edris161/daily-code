@@ -5,43 +5,91 @@ import SectionTitle from "../components/SectionTitle";
 import CourseCard from "../components/CourseCard";
 import TeacherCard from "../components/TeacherCard";
 import TestimonialCard from "../components/TestimonialCard";
+import FeatureCard from "../components/FeatureCard";
 import Link from "next/link";
 
 import { motion } from 'framer-motion';
+import { Users, GraduationCap, Clock, Globe } from 'lucide-react';
 
 export default function Home() {
   return (
     <div>
       <Hero />
 
-      {/* About Preview */}
+      {/* About Preview Section */}
       <motion.section
-        className="py-16 bg-transparent"
+        className="py-24 bg-white"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
       >
-        <div className="container mx-auto px-4">
-          <SectionTitle title="About Kaaj" subtitle="Empowering students to learn English" />
-          <motion.p
-            className="text-center text-gray-700 max-w-2xl mx-auto mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            Kaaj English Language Center is dedicated to providing high-quality English education for school and university students.
-          </motion.p>
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            viewport={{ once: true }}
-          >
-            <Link href="/about" className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-lg hover:shadow-xl">Learn More</Link>
-          </motion.div>
+        <div className="container mx-auto px-6 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            
+            {/* Left Text Content */}
+            <div className="space-y-6">
+              <span className="inline-block bg-orange-100 text-orange-600 px-3 py-1 rounded text-xs font-bold uppercase tracking-wider">
+                About Us
+              </span>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 leading-tight">
+                A trusted partner in<br />
+                mastering <span className="text-indigo-700">English</span>
+              </h2>
+
+              <div className="space-y-4 text-gray-500 text-lg leading-relaxed max-w-xl">
+                <p>
+                  Kaaj English Language Center has helped thousands of school and university students 
+                  achieve fluency, build confidence, and unlock new academic and career opportunities.
+                </p>
+                <p>
+                  With expert teachers, modern classrooms, and proven methodology, we make learning 
+                  English engaging and effective.
+                </p>
+              </div>
+
+              <div className="pt-4">
+                <Link href="/about" className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-full font-bold transition-all shadow-lg shadow-orange-100">
+                  Learn More <span>→</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* Right Feature Cards (Staggered Grid) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
+              {/* Card 1 */}
+              <FeatureCard 
+                icon={<Users size={24} />} 
+                title="Small Classes" 
+                desc="Max 12" 
+                bgColor="bg-blue-50/50"
+                className="lg:mt-0"
+              />
+              {/* Card 2 */}
+              <FeatureCard 
+                icon={<GraduationCap size={24} />} 
+                title="Certified" 
+                desc="Teachers" 
+                bgColor="bg-orange-50/40"
+                className="lg:-mt-12"
+              />
+              {/* Card 3 */}
+              <FeatureCard 
+                icon={<Clock size={24} />} 
+                title="Flexible" 
+                desc="Schedule" 
+                bgColor="bg-emerald-50/40"
+              />
+              {/* Card 4 */}
+              <FeatureCard 
+                icon={<Globe size={24} />} 
+                title="Online &" 
+                desc="On-site" 
+                bgColor="bg-purple-50/40"
+                className="lg:-mt-12"
+              />
+            </div>
+          </div>
         </div>
       </motion.section>
 
@@ -234,7 +282,7 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            <Link href="/apply" className="bg-yellow-400 text-black px-8 py-4 rounded-lg font-semibold hover:bg-yellow-500 transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-lg">Enroll Now</Link>
+            <Link href="/apply" className="btn btn-primary px-8 py-4 rounded-lg text-lg">Enroll Now</Link>
           </motion.div>
         </div>
       </motion.section>
